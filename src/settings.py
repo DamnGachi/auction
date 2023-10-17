@@ -1,4 +1,4 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class _Settings(BaseSettings):
@@ -8,7 +8,8 @@ class _Settings(BaseSettings):
 
 
 class _AppSettings(_Settings):
-    pass
+    API: str = "api"
+
 
 class _DatabaseSettings(_Settings):
     DB_USER: str

@@ -7,7 +7,7 @@ lint: ## Run linters
 
 .PHONY: run-dev
 run-dev: ## Run backend on development
-	uvicorn main:app --port 8500 --reload 
+	uvicorn run:app --port 8500 --reload 
 
 	
 .PHONY: run-prod
