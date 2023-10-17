@@ -1,19 +1,26 @@
+import sys
+from pathlib import Path
 
-from fastapi import FastAPI, Request, Response
+BASE_DIR = Path(__file__).resolve().parents[2]
+sys.path.append(str(BASE_DIR))
 
+from fastapi import FastAPI, HTTPException, Request, Response
+from src.api import api_router
+
+# from src.settings import app_settings
+from src.utils.exception_handlers import internal_server_error, not_found
 
 app = FastAPI(debug=True)
 
 
-@app.route("/error")
-async def error(request: Request) -> Response:
-    raise RuntimeError("Oh no")
+def create_app() -> FastAPI:
+    app = FastAPI()
 
+    @app.route("/error")
+    async def error(request: Request) -> Response:
+        raise RuntimeError("Oh no")
 
-@app.exception_handler(404)
-async def not_found(request: Request, exc: Exception) -> Response:
-    return Response(b"404 Not Found")
-
-@app.exception_handler(500)
-async def internal_server_error(request: Request, exc: Exception) -> Response:
-    return Response(b"500 Not Found")
+    app.include_router(api_router)  # prefix=app_settings.API
+    app.add_exception_handler(HTTPException, not_found)
+    app.add_exception_handler(HTTPException, internal_server_error)
+    return app
