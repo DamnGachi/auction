@@ -1,5 +1,5 @@
 from fastapi.responses import JSONResponse
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter
 
 
 router = APIRouter()
