@@ -20,7 +20,11 @@ def create_app() -> FastAPI:
     async def error(request: Request) -> Response:
         raise RuntimeError("Oh no")
 
-    app.include_router(api_router)  # prefix=app_settings.API
+    @app.route("/health_db")
+    async def health(request: Request) -> Response:
+        raise RuntimeError("Oh no")
+
+    app.include_router(api_router, prefix="/api")  # prefix=app_settings.API
     app.add_exception_handler(HTTPException, not_found)
     app.add_exception_handler(HTTPException, internal_server_error)
     return app

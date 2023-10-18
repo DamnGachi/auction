@@ -1,3 +1,4 @@
+from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings
 
 
@@ -20,7 +21,14 @@ class _DatabaseSettings(_Settings):
 
     @property
     def DB_URI(self):
-        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return PostgresDsn.build(
+            scheme="postgresql+asyncpg",
+            user=self.DB_USER,
+            password=self.DB_PASSWORD,
+            host=self.DB_HOST,
+            port=self.DB_PORT,
+            path=f"/{self.DB_NAME}",
+        )
 
 
 app_settings = _AppSettings()
