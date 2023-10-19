@@ -51,6 +51,7 @@ celerybeat.pid
 .env
 .venv
 venv/
+alembic.ini
 
 # Spyder project settings
 .spyderproject
@@ -76,3 +77,9 @@ dmypy.json
 # VS Code
 .vscode/
 node_modules
+
+# Kafka
+main-data
+
+# Logging
+app.log
