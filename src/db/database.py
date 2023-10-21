@@ -1,14 +1,13 @@
-from settings import db_settings
+from src.settings import db_settings
 from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-connection_string = db_settings.DB_URI
-
+connection_string = db_settings
 async_engine = create_async_engine(
-    connection_string,
+    connection_string.DB_URI,
     pool_pre_ping=True,
     future=True,
 )
@@ -16,7 +15,7 @@ async_factory = async_sessionmaker(
     bind=async_engine,
     autoflush=False,
     expire_on_commit=False,
-    class_=AsyncSession,
+    class_=AsyncSession, 
 )
 
 
@@ -25,3 +24,4 @@ async def async_get_session() -> AsyncGenerator[
 ]:  # noqa: WPS430, WPS442
     async with async_factory() as session:
         yield session
+
