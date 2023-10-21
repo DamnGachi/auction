@@ -34,7 +34,7 @@ class UnitOfWork:
         self.session_factory = async_factory
 
     async def __aenter__(self):
-        self.session = self.session_factory()
+        self.session = self.session_factory().begin()
 
         self.users = UsersRepository(self.session)
         

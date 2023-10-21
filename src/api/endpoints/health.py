@@ -1,6 +1,11 @@
+from typing import Annotated
 from fastapi.responses import JSONResponse
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from src.db.database import async_get_session
+from src.app.logger import logger
 
+# from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
@@ -31,5 +36,11 @@ async def health() -> JSONResponse:
         },
     },
 )
-async def health() -> JSONResponse:
-    return JSONResponse(status_code=200, content={"successful": True})
+async def health(session: AsyncSession = Depends(async_get_session)) -> JSONResponse:
+    try:
+        # async with session() as cursor:
+        #     cursor.execute("SELECT ACK as status;")
+        return JSONResponse(status_code=200, content={"successful": True})
+    except Exception as error:
+        logger.exception(error)
+        return JSONResponse(status_code=500, content={"successful": False})

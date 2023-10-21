@@ -1,18 +1,10 @@
 from pydantic import PostgresDsn
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 
 
 class _Settings(BaseSettings):
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-
-
-class _AppSettings(_Settings):
-    API: str = "api"
-
-
-class _DatabaseSettings(_Settings):
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
     DB_USER: str
     DB_NAME: str
     DB_PORT: int
@@ -21,15 +13,23 @@ class _DatabaseSettings(_Settings):
 
     @property
     def DB_URI(self):
-        return PostgresDsn.build(
+        return str(PostgresDsn.build(
             scheme="postgresql+asyncpg",
-            user=self.DB_USER,
-            password=self.DB_PASSWORD,
+            username=self.DB_USER,
+            password=self.DB_PASS,
             host=self.DB_HOST,
             port=self.DB_PORT,
-            path=f"/{self.DB_NAME}",
-        )
+            path=self.DB_NAME,
+        ))
+
+
+class _AppSettings(_Settings):
+    API: str = "api"
+
+
+class _DatabaseSettings(_Settings):
+    pass
 
 
 app_settings = _AppSettings()
-db_settings = _DatabaseSettings()
+db_settings = _Settings()

@@ -1,12 +1,13 @@
 import faust
 
 app = faust.App(
-    'hello-world',
-    broker='kafka://localhost:9092',
-    value_serializer='raw',
+    "main",
+    broker="kafka://localhost:9092",
+    value_serializer="raw",
 )
 
-greetings_topic = app.topic('greetings')
+greetings_topic = app.topic("greetings")
+
 
 @app.agent(greetings_topic)
 async def greet(greetings):
