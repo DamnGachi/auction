@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Type
 
-from db.database import async_factory
-from repositories.users import UsersRepository
+from src.db.database import async_factory
+from src.repositories.users import UsersRepository
 
 
-class IUnitOfWork(ABC):
+class InterfaceUnitOfWork(ABC):
     users: Type[UsersRepository]
     
     @abstractmethod
@@ -34,7 +34,7 @@ class UnitOfWork:
         self.session_factory = async_factory
 
     async def __aenter__(self):
-        self.session = self.session_factory().begin()
+        self.session = self.session_factory()
 
         self.users = UsersRepository(self.session)
         

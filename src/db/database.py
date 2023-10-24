@@ -1,11 +1,11 @@
-from src.settings import db_settings
+from src.settings import app_settings
 from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-connection_string = db_settings
+connection_string = app_settings
 async_engine = create_async_engine(
     connection_string.DB_URI,
     pool_pre_ping=True,
