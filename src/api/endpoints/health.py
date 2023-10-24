@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from typing import Annotated
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Depends
@@ -38,8 +39,8 @@ async def health() -> JSONResponse:
 )
 async def health(session: AsyncSession = Depends(async_get_session)) -> JSONResponse:
     try:
-        # async with session() as cursor:
-        #     cursor.execute("SELECT ACK as status;")
+        async with session as cursor:
+            await cursor.scalar(select(1))
         return JSONResponse(status_code=200, content={"successful": True})
     except Exception as error:
         logger.exception(error)
