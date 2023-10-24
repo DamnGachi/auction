@@ -12,7 +12,14 @@ class UserDtoRead(BaseModel):
 
 
 class UserDtoAdd(BaseModel):
-    id: str
+    id: UUID
     username: str
     hashed_password: str
     balance: float
+
+
+class UserDtoEdit(BaseModel):
+    id: UUID
+    username: str | None
+    hashed_password: str | None
+    balance: float | None

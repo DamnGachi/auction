@@ -1,7 +1,9 @@
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
+from sqlalchemy import exc
 from .dependencies import UOWDep
-from src.dto.users import UserDtoAdd
+from src.dto.users import UserDtoAdd, UserDtoEdit
 from src.crud.users import UsersService
 
 
@@ -23,3 +25,15 @@ async def get_users(
 ):
     users = await UsersService().get_users(uow)
     return users
+
+
+@router.patch("")
+async def edit_users(
+    user: UserDtoEdit,
+    uow: UOWDep,
+):
+    try:
+        users = await UsersService().edit_user(uow, user)
+        return users
+    except exc.NoResultFound:
+        return JSONResponse(status_code=404, content={"User not Found": 404})
