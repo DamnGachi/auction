@@ -13,23 +13,16 @@ class _Settings(BaseSettings):
 
     @property
     def DB_URI(self):
-        return str(PostgresDsn.build(
-            scheme="postgresql+asyncpg",
-            username=self.DB_USER,
-            password=self.DB_PASS,
-            host=self.DB_HOST,
-            port=self.DB_PORT,
-            path=self.DB_NAME,
-        ))
+        return str(
+            PostgresDsn.build(
+                scheme="postgresql+asyncpg",
+                username=self.DB_USER,
+                password=self.DB_PASS,
+                host=self.DB_HOST,
+                port=self.DB_PORT,
+                path=self.DB_NAME,
+            )
+        )
 
 
-class _AppSettings(_Settings):
-    API: str = "api"
-
-
-class _DatabaseSettings(_Settings):
-    pass
-
-
-app_settings = _AppSettings()
-db_settings = _Settings()
+app_settings = _Settings()

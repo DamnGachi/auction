@@ -1,5 +1,5 @@
-from models.main import User
-from utils.repository import SQLAlchemyRepository
+from src.models.main import User
+from src.utils.repository import SQLAlchemyRepository
 
 
 class UsersRepository(SQLAlchemyRepository):
