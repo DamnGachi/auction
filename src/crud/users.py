@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.dto.users import UserDtoAdd, UserDtoEdit
+from src.dto.users import UserDtoAdd, UserDtoDelete, UserDtoEdit, UserDtoGet
 from src.utils.unitofwork import InterfaceUnitOfWork
 
 
@@ -17,11 +17,13 @@ class UsersService:
             users = await uow.users.find_all()
             return users
 
-    async def get_user(self, uow: InterfaceUnitOfWork, user_uid: UUID):
-        pass
+    async def get_user(self, uow: InterfaceUnitOfWork, user: UserDtoGet):
+        user_dict = user.model_dump()
+        async with uow:
+            user_id = await uow.users.find_one(user_dict)
+            return user_id
 
     async def edit_user(self, uow: InterfaceUnitOfWork, user: UserDtoEdit):
-
         user_dict = user.model_dump()
         id = user_dict["id"]
         async with uow:
@@ -29,5 +31,8 @@ class UsersService:
             await uow.commit()
             return user_id
 
-    async def delete_user(self, uow: InterfaceUnitOfWork, user_uid: UUID):
-        pass
+    async def delete_user(self, uow: InterfaceUnitOfWork, user_id: UserDtoDelete):
+        async with uow:
+            user_id = await uow.users.edit_one(user_id)
+            await uow.commit()
+            return user_id
