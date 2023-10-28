@@ -18,3 +18,11 @@ run-prod: ## Run backend on production
 .PHONY: migrate-up
 migrate-up: ## Run migrations
 	alembic revision --autogenerate -m "never" && alembic upgrade head
+
+.PHONY: docker-run
+docker-run:
+	docker-compose -f docker/docker-compose.yml up -d
+
+.PHONY: kafka-Run
+kafka-run: ## Run Kafka 
+	faust -A pkg.main worker -l info

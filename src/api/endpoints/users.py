@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from sqlalchemy import exc
 from .dependencies import UOWDep
-from src.dto.users import UserDtoAdd, UserDtoEdit, UserDtoGet
+from src.dto.users import UserDtoAdd, UserDtoDelete, UserDtoEdit, UserDtoGet
 from src.crud.users import UsersService
 
 
@@ -22,7 +22,7 @@ async def add_user(
 @router.get("/all")
 async def get_users(
     uow: UOWDep,
-): 
+):
     users = await UsersService().get_users(uow)
     return users
 
@@ -34,12 +34,24 @@ async def get_user(uow: UOWDep, user: UserDtoGet = Depends(UserDtoGet.as_form)):
 
 
 @router.patch("")
-async def edit_users(
+async def edit_user(
     user: UserDtoEdit,
     uow: UOWDep,
 ):
     try:
         users = await UsersService().edit_user(uow, user)
+        return users
+    except exc.NoResultFound:
+        return JSONResponse(status_code=404, content={"User not Found": 404})
+
+
+@router.delete("")
+async def delete_user(
+    user: UserDtoDelete,
+    uow: UOWDep,
+):
+    try:
+        users = await UsersService().delete_user(uow, user)
         return users
     except exc.NoResultFound:
         return JSONResponse(status_code=404, content={"User not Found": 404})
