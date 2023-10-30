@@ -2,11 +2,12 @@ from abc import ABC, abstractmethod
 from typing import Type
 
 from src.db.database import async_factory
-from src.repositories.users import UsersRepository
+from src.repositories.users import LotsRepository, UsersRepository
 
 
 class InterfaceUnitOfWork(ABC):
     users: Type[UsersRepository]
+    lots: Type[LotsRepository]
     
     @abstractmethod
     def __init__(self):
