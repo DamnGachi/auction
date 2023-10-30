@@ -19,8 +19,11 @@ class UsersService:
 
     async def get_user(self, uow: InterfaceUnitOfWork, user: UserDtoGet):
         user_dict = user.model_dump()
+        # print(user_dict)
+        for users in user:
+            print(users)
         async with uow:
-            user_id = await uow.users.find_one(user_dict)
+            user_id = await uow.users.find_one(user)
             return user_id
 
     async def edit_user(self, uow: InterfaceUnitOfWork, user: UserDtoEdit):
