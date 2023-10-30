@@ -27,8 +27,8 @@ async def get_users(
     return users
 
 
-@router.get("/one")
-async def get_user(uow: UOWDep, user: UserDtoGet = Depends(UserDtoGet.as_form)):
+@router.post("/one")
+async def get_user(uow: UOWDep, user: UserDtoGet):
     user = await UsersService().get_user(uow, user)
     return user
 

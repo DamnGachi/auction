@@ -40,6 +40,7 @@ class SQLAlchemyRepository(AbstractRepository):
         return res
 
     async def find_one(self, **filter_by):
+        # print(*filter_by) 
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
         res = res.scalar_one().to_read_model()
