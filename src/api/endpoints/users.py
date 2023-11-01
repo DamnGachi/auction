@@ -12,8 +12,8 @@ router = APIRouter()
 
 @router.post("")
 async def add_user(
-    user: UserDtoAdd,
     uow: UOWDep,
+    user: UserDtoAdd = Depends(UserDtoAdd.as_form),
 ):
     user_id = await UsersService().add_user(uow, user)
     return {"user_id": user_id}
@@ -28,15 +28,15 @@ async def get_users(
 
 
 @router.post("/one")
-async def get_user(uow: UOWDep, user: UserDtoGet):
+async def get_user(uow: UOWDep, user: UserDtoGet = Depends(UserDtoGet.as_form)):
     user = await UsersService().get_user(uow, user)
     return user
 
 
 @router.patch("")
 async def edit_user(
-    user: UserDtoEdit,
     uow: UOWDep,
+    user: UserDtoEdit = Depends(UserDtoEdit.as_form),
 ):
     try:
         users = await UsersService().edit_user(uow, user)
@@ -47,8 +47,8 @@ async def edit_user(
 
 @router.delete("")
 async def delete_user(
-    user: UserDtoDelete,
     uow: UOWDep,
+    user: UserDtoDelete =Depends(UserDtoDelete.as_form),
 ):
     try:
         users = await UsersService().delete_user(uow, user)

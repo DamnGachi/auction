@@ -2,7 +2,7 @@ version: '3.9'
 services:
   db:
     image: postgres:latest
-    container_name: travel_messanger_db
+    container_name: db_cli
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
