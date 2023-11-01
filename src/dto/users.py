@@ -13,7 +13,7 @@ class UserDtoRead(BaseModel):
 
 
 class UserDtoAdd(BaseModel):
-    id: UUID
+    # id: UUID
     username: str
     hashed_password: str
     balance: float
@@ -38,9 +38,9 @@ class UserDtoEdit(BaseModel):
     def as_form(
         cls,
         id: UUID = Form(...),
-        username: str = Form(...),
-        hashed_password: str = Form(...),
-        balance: float = Form(...),
+        username: str | None = Form(None),
+        hashed_password: str | None = Form(None),
+        balance: float | None = Form(None),
     ):
         return cls(
             id=id, username=username, hashed_password=hashed_password, balance=balance
