@@ -36,6 +36,6 @@ class UsersService:
 
     async def delete_user(self, uow: InterfaceUnitOfWork, user_id: UserDtoDelete):
         async with uow:
-            user = await uow.users.delete_one(user_id)
+            user = await uow.users.delete_one(user_id.id)
             await uow.commit()
             return user
