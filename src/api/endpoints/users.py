@@ -48,7 +48,7 @@ async def edit_user(
 @router.delete("")
 async def delete_user(
     uow: UOWDep,
-    user: UserDtoDelete =Depends(UserDtoDelete.as_form),
+    user: UserDtoDelete = Depends(UserDtoDelete.as_form),
 ):
     try:
         users = await UsersService().delete_user(uow, user)
