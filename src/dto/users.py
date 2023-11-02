@@ -49,21 +49,13 @@ class UserDtoEdit(BaseModel):
 
 class UserDtoGet(BaseModel):
     id: UUID
-    username: str | None
-    hashed_password: str | None
-    balance: float | None
 
     @classmethod
     def as_form(
         cls,
         id: UUID = Form(...),
-        username: str | None = Form(None),
-        hashed_password: str | None = Form(None),
-        balance: float | None = Form(None),
     ):
-        return cls(
-            id=id, username=username, hashed_password=hashed_password, balance=balance
-        )
+        return cls(id=id)
 
 
 class UserDtoDelete(BaseModel):
