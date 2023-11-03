@@ -26,12 +26,13 @@ class LotDtoAdd(BaseModel):
         description: str = Form(...),
         start_bet: int = Form(...),
     ):
-        return cls(title=title, start_bet=start_bet)
+        return cls(title=title, description=description, start_bet=start_bet)
 
 
 class LotDtoEdit(BaseModel):
     id: UUID
     title: str | None
+    description: str | None
     start_bet: int | None
 
     @classmethod
@@ -41,9 +42,7 @@ class LotDtoEdit(BaseModel):
         title: str = Form(...),
         start_bet: int = Form(...),
     ):
-        return cls(
-            id=id, title=title, start_bet=start_bet
-        )
+        return cls(id=id, title=title, start_bet=start_bet)
 
 
 class LotDtoGet(BaseModel):
@@ -56,11 +55,10 @@ class LotDtoGet(BaseModel):
         cls,
         id: UUID = Form(...),
         title: str | None = Form(None),
+        description: str | None = Form(None),
         start_bet: int | None = Form(None),
     ):
-        return cls(
-            id=id, title=title, start_bet=start_bet
-        )
+        return cls(id=id, title=title, description=description, start_bet=start_bet)
 
 
 class LotDtoDelete(BaseModel):
