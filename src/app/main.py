@@ -11,7 +11,7 @@ sys.path.append(str(BASE_DIR))
 
 from fastapi import FastAPI, HTTPException, Request, Response, status
 from src.api import api_router
-from src.app.consumer.init import get_faust_app, set_faust_app_for_api
+from src.app.worker.init import get_faust_app, set_faust_app_for_api
 from src.utils.exception_handlers import internal_server_error, not_found
 
 app = FastAPI(debug=True)
@@ -19,33 +19,6 @@ app = FastAPI(debug=True)
 
 def create_app() -> FastAPI:
     app = FastAPI()
-
-    @app.post("/increment", response_class=RedirectResponse)
-    async def increment():
-        increment_task = importlib.import_module(
-            "app.worker.tasks.increment",
-        )
-        await increment_task.agent.ask()
-
-        # redirect the user back to the entrypoint
-        return RedirectResponse(
-            url=app.url_path_for("entrypoint"),
-            status_code=status.HTTP_303_SEE_OTHER,
-        )
-
-    @app.get("/", response_class=HTMLResponse)
-    async def entrypoint():
-        get_current_count_task = importlib.import_module(
-            "app.worker.tasks.get_current_count",
-        )
-        count = await get_current_count_task.agent.ask()
-
-        return f"""
-            <h1>Current count: {count}</h1>
-            <form method="post" action="/increment">
-                <input type="submit" value="Increment!">
-            </form>
-            """
 
     @app.on_event("startup")
     async def startup_event():
@@ -64,6 +37,33 @@ def create_app() -> FastAPI:
         faust_app = get_faust_app()
         # graceful shutdown
         await faust_app.stop()
+
+    @app.post("/increment", response_class=RedirectResponse)
+    async def increment():
+        increment_task = importlib.import_module(
+            "src.app.worker.tasks.increment",
+        )
+        await increment_task.agent.ask()
+
+        # redirect the user back to the entrypoint
+        return RedirectResponse(
+            url=app.url_path_for("entrypoint"),
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+
+    @app.get("/", response_class=HTMLResponse)
+    async def entrypoint():
+        get_current_count_task = importlib.import_module(
+            "src.app.worker.tasks.get_current_count",
+        )
+        count = await get_current_count_task.agent.ask()
+
+        return f"""
+            <h1>Current count: {count}</h1>
+            <form method="post" action="/increment">
+                <input type="submit" value="Increment!">
+            </form>
+            """
 
     app.include_router(api_router, prefix="/api")  # prefix=app_settings.API
     app.add_exception_handler(HTTPException, not_found)
