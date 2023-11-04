@@ -17,10 +17,10 @@ def set_faust_app_for_worker() -> Optional[faust.App]:
 
     _faust_app = faust.App(
         "worker",
-        broker=os.getenv("FAUST_BROKER_URL"),
-        store="rocksdb://",
+        broker="kafka://localhost:9092",
+        # store="rocksdb://",
         autodiscover=True,
-        origin="app.worker",
+        origin="src.app",
     )
 
     return _faust_app
@@ -35,7 +35,7 @@ def set_faust_app_for_api() -> Optional[faust.App]:
         "worker",
         broker="kafka://localhost:9092",
         autodiscover=True,
-        origin="app.worker",
+        origin="src.app",
         loop=asyncio.get_running_loop(),
         reply_create_topic=True,
     )
