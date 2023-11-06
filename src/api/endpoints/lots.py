@@ -12,10 +12,20 @@ from src.crud.users import UsersService
 router = APIRouter()
 
 
+@router.put("/")
+async def move_lot_to_archive():
+    pass
+
+
+@router.put("/")
+async def create_lot():
+    pass
+
+
 @router.get("/")
-async def add_lot(
-    uow: UOWDep,
-    user: LotDtoAdd = Depends(LotDtoAdd.as_form),
-):
-    user_id = await UsersService().add_user(uow, user)
-    return {"user_id": user_id}
+async def get_lots():
+    pass
+
+@router.delete("/")
+async def delete_lot():
+    pass
