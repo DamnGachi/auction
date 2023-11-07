@@ -1,3 +1,4 @@
+import importlib
 from sqlalchemy import select
 from typing import Annotated
 from fastapi.responses import JSONResponse
@@ -9,6 +10,19 @@ from src.app.logger import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
+
+
+@router.post("/broker")
+async def health():
+    """Send message to broker, for helath check"""
+    increment_task = importlib.import_module(
+        "src.app.worker.tasks.increment",
+    )
+
+    response = await increment_task.agent.send()
+    print(increment_task)
+    print(response)
+    # return response
 
 
 @router.get(
