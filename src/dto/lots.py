@@ -55,10 +55,9 @@ class LotDtoGet(BaseModel):
         cls,
         id: UUID = Form(...),
         title: str | None = Form(None),
-        description: str | None = Form(None),
         start_bet: int | None = Form(None),
     ):
-        return cls(id=id, title=title, description=description, start_bet=start_bet)
+        return cls(id=id, title=title, start_bet=start_bet)
 
 
 class LotDtoDelete(BaseModel):
