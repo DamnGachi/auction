@@ -18,7 +18,6 @@ def set_faust_app_for_worker() -> Optional[faust.App]:
     _faust_app = faust.App(
         "worker",
         broker="kafka://localhost:9092",
-        # store="rocksdb://",
         autodiscover=True,
         origin="src.app",
     )

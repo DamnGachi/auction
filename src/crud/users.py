@@ -8,8 +8,12 @@ class UsersService:
     async def add_user(self, uow: InterfaceUnitOfWork, user: UserDtoAdd):
         user_dict = user.model_dump()
         user_dict["id"] = uuid4()
+
         async with uow:
             user_id = await uow.users.add_one(user_dict)
+            from src.app.worker.tasks.users import agent_users
+
+            await agent_users.send(value=user_dict)
             await uow.commit()
             return user_id
 

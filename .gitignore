@@ -79,7 +79,7 @@ dmypy.json
 node_modules
 
 # Kafka
-main-data
+worker-data
 
 # Logging
 app.log
