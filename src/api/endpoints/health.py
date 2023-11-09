@@ -12,17 +12,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 router = APIRouter()
 
 
-@router.post("/broker")
-async def health():
+@router.get(
+    "/broker",
+    responses={
+        200: {
+            "description": "Broker avaliable",
+            "content": {"application/json": {"example": {"successful": True}}},
+        },
+        500: {
+            "description": "Broker not avaliable",
+            "content": {"application/json": {"example": {"successful": False}}},
+        },
+    },
+)
+async def health() -> JSONResponse:
     """Send message to broker, for helath check"""
-    increment_task = importlib.import_module(
-        "src.app.worker.tasks.increment",
-    )
-
-    response = await increment_task.agent.send()
-    print(increment_task)
-    print(response)
-    # return response
+    return JSONResponse(status_code=501, content={"error": "NotImplementedError"})
 
 
 @router.get(
