@@ -14,9 +14,12 @@ router = APIRouter()
 async def add_user(
     uow: UOWDep,
     user: UserDtoAdd = Depends(UserDtoAdd.as_form),
-):
-    user_id = await UsersService().add_user(uow, user)
-    return {"user_id": user_id}
+) -> JSONResponse:
+    try:
+        user_id = await UsersService().add_user(uow, user)
+        return {"user_id": user_id}
+    except exc.IntegrityError:
+        return JSONResponse(status_code=409, content={"error": "user already exist"})
 
 
 @router.get("/all")
