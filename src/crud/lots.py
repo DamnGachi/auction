@@ -1,3 +1,5 @@
+from datetime import datetime
+from uuid import uuid4
 from src.dto.lots import LotDtoAdd, LotDtoDelete, LotDtoEdit, LotDtoGet
 from src.utils.unitofwork import InterfaceUnitOfWork
 
@@ -5,6 +7,7 @@ from src.utils.unitofwork import InterfaceUnitOfWork
 class LotsService:
     async def add_lot(self, uow: InterfaceUnitOfWork, lot: LotDtoAdd):
         lot_dict = lot.model_dump()
+        lot_dict["id"] = uuid4()
         async with uow:
             lot_id = await uow.lots.add_one(lot_dict)
             await uow.commit()

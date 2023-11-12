@@ -50,9 +50,10 @@ class Lot(Base):
     winner_uid: Mapped[str] = mapped_column(
         ForeignKey("users.id"), nullable=True, unique=True
     )
+    current_bet: Mapped[float] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(onupdate=func.now())
-    closed_at: Mapped[datetime]
+    updated_at: Mapped[datetime] = mapped_column(onupdate=func.now(), nullable=True)
+    closed_at: Mapped[datetime] = mapped_column(nullable=True)
 
     def to_read_model(self) -> UserDtoRead:
         return UserDtoRead(

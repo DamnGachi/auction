@@ -83,3 +83,6 @@ worker-data
 
 # Logging
 app.log
+
+# Other
+/main.py
