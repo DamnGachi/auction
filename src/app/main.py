@@ -1,9 +1,6 @@
 import asyncio
-import importlib
 import sys
 from pathlib import Path
-
-from fastapi.responses import HTMLResponse, RedirectResponse
 from src.app.logger import logger
 
 BASE_DIR = Path(__file__).resolve().parents[2]

@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
 
 from sqlalchemy import exc
 
-from src.dto.lots import LotDtoAdd
 from .dependencies import UOWDep
 from src.dto.lots import LotDtoAdd, LotDtoDelete, LotDtoEdit, LotDtoGet
 from src.crud.lots import LotsService
@@ -19,12 +17,12 @@ async def move_lot_to_archive(
     pass
 
 
-@router.put("/")
+@router.post("/")
 async def create_lot(
     uow: UOWDep,
     lot: LotDtoAdd = Depends(LotDtoAdd.as_form),
 ):
-    lot_id = LotsService.add_lot(uow, lot)
+    lot_id = await LotsService().add_lot(uow, lot)
     return {"lot_id": lot_id}
 
 

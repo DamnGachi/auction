@@ -6,9 +6,9 @@ from src.repositories.users import LotsRepository, UsersRepository
 
 
 class InterfaceUnitOfWork(ABC):
-    users: Type[UsersRepository]
     lots: Type[LotsRepository]
-    
+    users: Type[UsersRepository]
+
     @abstractmethod
     def __init__(self):
         ...
@@ -38,13 +38,14 @@ class UnitOfWork:
         self.session = self.session_factory()
 
         self.users = UsersRepository(self.session)
-        
+        self.lots = LotsRepository(self.session)
+
     async def __aexit__(self, *args):
         await self.rollback()
         await self.session.close()
 
     async def commit(self):
         await self.session.commit()
-        
+
     async def rollback(self):
         await self.session.rollback()

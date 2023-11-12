@@ -1,5 +1,7 @@
 from uuid import UUID, uuid4
 
+from fastapi import HTTPException
+
 from src.dto.users import UserDtoAdd, UserDtoDelete, UserDtoEdit, UserDtoGet
 from src.utils.unitofwork import InterfaceUnitOfWork
 
@@ -13,8 +15,8 @@ class UsersService:
             user_id = await uow.users.add_one(user_dict)
             from src.app.worker.tasks.users import agent_users
 
-            await agent_users.send(value=user_dict)
             await uow.commit()
+            await agent_users.send(value=user_dict)
             return user_id
 
     async def get_users(self, uow: InterfaceUnitOfWork):

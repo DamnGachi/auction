@@ -14,7 +14,6 @@ class LotDtoRead(BaseModel):
 
 
 class LotDtoAdd(BaseModel):
-    id: UUID
     title: str
     start_bet: int
     description: str
