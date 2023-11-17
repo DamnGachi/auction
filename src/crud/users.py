@@ -44,4 +44,4 @@ class UsersService:
         async with uow:
             user = await uow.users.delete_one(user_id.id)
             await uow.commit()
-            return user
+            return user_id

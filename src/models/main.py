@@ -1,6 +1,7 @@
 from datetime import datetime
 from sqlalchemy import ForeignKey
 from sqlalchemy.sql import func
+from src.dto.lots import LotDtoRead
 from src.dto.users import UserDtoRead
 
 from src.db.database import Base
@@ -55,13 +56,14 @@ class Lot(Base):
     updated_at: Mapped[datetime] = mapped_column(onupdate=func.now(), nullable=True)
     closed_at: Mapped[datetime] = mapped_column(nullable=True)
 
-    def to_read_model(self) -> UserDtoRead:
-        return UserDtoRead(
+    def to_read_model(self) -> LotDtoRead:
+        return LotDtoRead(
             id=self.id,
             title=self.title,
             description=self.description,
             start_bet=self.start_bet,
             winner_uid=self.winner_uid,
+            current_bet=self.current_bet,
             created_at=self.created_at,
             updated_at=self.updated_at,
             closed_at=self.closed_at,
