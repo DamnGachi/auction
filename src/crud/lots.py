@@ -9,9 +9,9 @@ class LotsService:
         lot_dict = lot.model_dump()
         lot_dict["id"] = uuid4()
         async with uow:
-            lot_id = await uow.lots.add_one(lot_dict)
+            lot = await uow.lots.add_one(lot_dict)
             await uow.commit()
-            return lot_id
+            return lot_dict
 
     async def get_lots(self, uow: InterfaceUnitOfWork):
         async with uow:

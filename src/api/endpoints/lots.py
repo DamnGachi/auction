@@ -1,3 +1,4 @@
+from typing import Any, Union,List
 from fastapi import APIRouter, Depends
 
 from sqlalchemy import exc
@@ -17,18 +18,21 @@ async def move_lot_to_archive(
     pass
 
 
-@router.post("/")
+@router.post("/", response_model=Union[LotDtoAdd, Any])
 async def create_lot(
     uow: UOWDep,
     lot: LotDtoAdd = Depends(LotDtoAdd.as_form),
 ):
-    lot_id = await LotsService().add_lot(uow, lot)
-    return {"lot_id": lot_id}
+    created_lot = await LotsService().add_lot(uow, lot)
+    return created_lot
 
 
-@router.get("/")
-async def get_lots():
-    pass
+@router.get("/", response_model=Union[List[LotDtoGet], Any])
+async def get_lots(
+    uow: UOWDep,
+):
+    lots = await LotsService().get_lots(uow)
+    return lots
 
 
 @router.delete("/")
