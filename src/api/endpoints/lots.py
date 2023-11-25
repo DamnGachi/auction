@@ -2,7 +2,7 @@ from typing import Any, Union,List
 from fastapi import APIRouter, Depends
 
 from sqlalchemy import exc
-
+from fastapi_pagination import Page, add_pagination, paginate
 from .dependencies import UOWDep
 from src.dto.lots import LotDtoAdd, LotDtoDelete, LotDtoEdit, LotDtoGet
 from src.crud.lots import LotsService
@@ -27,12 +27,12 @@ async def create_lot(
     return created_lot
 
 
-@router.get("/", response_model=Union[List[LotDtoGet], Any])
+@router.get("/", response_model=Page[Union[List[LotDtoGet], Any]])
 async def get_lots(
     uow: UOWDep,
 ):
     lots = await LotsService().get_lots(uow)
-    return lots
+    return paginate(lots)
 
 
 @router.delete("/")
