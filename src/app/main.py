@@ -1,6 +1,8 @@
 import asyncio
 import sys
 from pathlib import Path
+
+from fastapi_pagination import add_pagination
 from src.app.logger import logger
 
 BASE_DIR = Path(__file__).resolve().parents[2]
@@ -34,7 +36,7 @@ def create_app() -> FastAPI:
         faust_app = get_faust_app()
         # graceful shutdown
         await faust_app.stop()
-
+    add_pagination(app)
     app.include_router(api_router, prefix="/api")  # prefix=app_settings.API
     app.add_exception_handler(HTTPException, not_found)
     app.add_exception_handler(HTTPException, internal_server_error)
