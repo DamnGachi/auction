@@ -3,7 +3,7 @@ from fastapi import Form
 from pydantic import BaseModel
 
 
-class UserDtoRead(BaseModel):
+class UserDTORead(BaseModel):
     id: UUID
     username: str
     balance: float
@@ -11,14 +11,14 @@ class UserDtoRead(BaseModel):
     class Config:
         from_attributes = True
 
-class UserDtoResponse(BaseModel):
+class UserDTOResponse(BaseModel):
     id: UUID
 
     class Config:
         from_attributes = True
 
 
-class UserDtoAdd(BaseModel):
+class UserDTOAdd(BaseModel):
     # id: UUID
     username: str
     hashed_password: str
@@ -34,7 +34,7 @@ class UserDtoAdd(BaseModel):
         return cls(username=username, hashed_password=hashed_password, balance=balance)
 
 
-class UserDtoEdit(BaseModel):
+class UserDTOEdit(BaseModel):
     id: UUID
     username: str | None
     hashed_password: str | None
@@ -53,7 +53,7 @@ class UserDtoEdit(BaseModel):
         )
 
 
-class UserDtoGet(BaseModel):
+class UserDTOGet(BaseModel):
     id: UUID
 
     @classmethod
@@ -64,7 +64,7 @@ class UserDtoGet(BaseModel):
         return cls(id=id)
 
 
-class UserDtoDelete(BaseModel):
+class UserDTODelete(BaseModel):
     id: UUID
 
     @classmethod
