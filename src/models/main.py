@@ -1,8 +1,8 @@
 from datetime import datetime
 from sqlalchemy import ForeignKey
 from sqlalchemy.sql import func
-from src.dto.lots import LotDtoRead
-from src.dto.users import UserDtoRead
+from src.dto.lots import LotDTORead
+from src.dto.users import UserDTORead
 
 from src.db.database import Base
 from sqlalchemy.orm import Mapped, mapped_column
@@ -19,8 +19,8 @@ class User(Base):
     hashed_password: Mapped[str]
     balance: Mapped[float]
 
-    def to_read_model(self) -> UserDtoRead:
-        return UserDtoRead(
+    def to_read_model(self) -> UserDTORead:
+        return UserDTORead(
             id=self.id,
             username=self.username,
             hashed_password=self.hashed_password,
@@ -34,8 +34,8 @@ class UserLot(Base):
     lot_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("lots.id"))
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
 
-    def to_read_model(self) -> UserDtoRead:
-        return UserDtoRead(
+    def to_read_model(self) -> UserDTORead:
+        return UserDTORead(
             id=self.id,
             lot_id=self.lot_id,
             user_id=self.user_id,
@@ -56,8 +56,8 @@ class Lot(Base):
     updated_at: Mapped[datetime] = mapped_column(onupdate=func.now(), nullable=True)
     closed_at: Mapped[datetime] = mapped_column(nullable=True)
 
-    def to_read_model(self) -> LotDtoRead:
-        return LotDtoRead(
+    def to_read_model(self) -> LotDTORead:
+        return LotDTORead(
             id=self.id,
             title=self.title,
             description=self.description,

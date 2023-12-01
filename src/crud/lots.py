@@ -1,11 +1,11 @@
 from datetime import datetime
 from uuid import uuid4
-from src.dto.lots import LotDtoAdd, LotDtoDelete, LotDtoEdit, LotDtoGet
+from src.dto.lots import LotDTOAdd, LotDTODelete, LotDTOEdit, LotDTOGet
 from src.utils.unitofwork import InterfaceUnitOfWork
 
 
 class LotsService:
-    async def add_lot(self, uow: InterfaceUnitOfWork, lot: LotDtoAdd):
+    async def add_lot(self, uow: InterfaceUnitOfWork, lot: LotDTOAdd):
         lot_dict = lot.model_dump()
         lot_dict["id"] = uuid4()
         async with uow:
@@ -18,21 +18,22 @@ class LotsService:
             lots = await uow.lots.find_all()
             return lots
 
-    async def get_lot(self, uow: InterfaceUnitOfWork, lot: LotDtoGet):
-        lot_dict = lot.model_dump()
+    async def get_lot(self, uow: InterfaceUnitOfWork, lot: LotDTOGet):
         async with uow:
-            lot_id = await uow.lots.find_one(lot_dict)
-            return lot_id
+            reuslt = await uow.lots.find_one(lot)
+            return reuslt
 
-    async def edit_lot(self, uow: InterfaceUnitOfWork, lot: LotDtoEdit):
+    async def edit_lot(self, uow: InterfaceUnitOfWork, lot: LotDTOEdit):
         lot_dict = lot.model_dump()
         id = lot_dict["id"]
+        # lot_in_db = self.get_lot(uow, lot)
+        # if lot_in_db.current_bet
         async with uow:
             lot_id = await uow.lots.edit_one(id, lot_dict)
             await uow.commit()
             return lot_id
 
-    async def delete_lot(self, uow: InterfaceUnitOfWork, lot_id: LotDtoDelete):
+    async def delete_lot(self, uow: InterfaceUnitOfWork, lot_id: LotDTODelete):
         async with uow:
             lot = await uow.lots.delete_one(lot_id)
             await uow.commit()

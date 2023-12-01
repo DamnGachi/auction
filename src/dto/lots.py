@@ -4,7 +4,7 @@ from fastapi import Form
 from pydantic import BaseModel
 
 
-class LotDtoRead(BaseModel):
+class LotDTORead(BaseModel):
     id: UUID
     title: str | None
     start_bet: int | None
@@ -18,7 +18,7 @@ class LotDtoRead(BaseModel):
         from_attributes = True
 
 
-class LotDtoAdd(BaseModel):
+class LotDTOAdd(BaseModel):
     title: str
     start_bet: int
     description: str
@@ -33,23 +33,37 @@ class LotDtoAdd(BaseModel):
         return cls(title=title, description=description, start_bet=start_bet)
 
 
-class LotDtoEdit(BaseModel):
+class LotDTOEdit(BaseModel):
     id: UUID
-    title: str | None
-    description: str | None
+    # title: str | None
     current_bet: int | None
 
     @classmethod
     def as_form(
         cls,
         id: UUID = Form(...),
-        title: str = Form(...),
+        # title: str = Form(...),
         current_bet: int = Form(...),
     ):
-        return cls(id=id, title=title, current_bet=current_bet)
+        return cls(
+            id=id,
+            # title=title,
+            current_bet=current_bet,
+        )
 
 
-class LotDtoGet(BaseModel):
+class LotDTOGet(BaseModel):
+    id: UUID
+
+    @classmethod
+    def as_form(
+        cls,
+        id: UUID = Form(...),
+    ):
+        return cls(id=id)
+
+
+class LotDTOGets(BaseModel):
     id: UUID
     title: str | None
     start_bet: int | None
@@ -69,7 +83,7 @@ class LotDtoGet(BaseModel):
         return cls(id=id, title=title, start_bet=start_bet)
 
 
-class LotDtoDelete(BaseModel):
+class LotDTODelete(BaseModel):
     id: UUID
 
     @classmethod

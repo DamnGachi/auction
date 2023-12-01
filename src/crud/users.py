@@ -2,12 +2,12 @@ from uuid import UUID, uuid4
 
 from fastapi import HTTPException
 
-from src.dto.users import UserDtoAdd, UserDtoDelete, UserDtoEdit, UserDtoGet
+from src.dto.users import UserDTOAdd, UserDTODelete, UserDTOEdit, UserDTOGet
 from src.utils.unitofwork import InterfaceUnitOfWork
 
 
 class UsersService:
-    async def add_user(self, uow: InterfaceUnitOfWork, user: UserDtoAdd):
+    async def add_user(self, uow: InterfaceUnitOfWork, user: UserDTOAdd):
         user_dict = user.model_dump()
         user_dict["id"] = uuid4()
 
@@ -24,12 +24,12 @@ class UsersService:
             users = await uow.users.find_all()
             return users
 
-    async def get_user(self, uow: InterfaceUnitOfWork, user: UserDtoGet):
+    async def get_user(self, uow: InterfaceUnitOfWork, user: UserDTOGet):
         async with uow:
             user = await uow.users.find_one(user)
             return user
 
-    async def edit_user(self, uow: InterfaceUnitOfWork, user: UserDtoEdit):
+    async def edit_user(self, uow: InterfaceUnitOfWork, user: UserDTOEdit):
         user_dict = user.model_dump()
         for row, value in list(user_dict.items()):
             if value is None:
@@ -40,7 +40,7 @@ class UsersService:
             await uow.commit()
             return user_id
 
-    async def delete_user(self, uow: InterfaceUnitOfWork, user_id: UserDtoDelete):
+    async def delete_user(self, uow: InterfaceUnitOfWork, user_id: UserDTODelete):
         async with uow:
             user = await uow.users.delete_one(user_id.id)
             await uow.commit()
