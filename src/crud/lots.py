@@ -29,12 +29,12 @@ class LotsService:
         # lot_in_db = self.get_lot(uow, lot)
         # if lot_in_db.current_bet
         async with uow:
-            lot_id = await uow.lots.edit_one(id, lot_dict)
+            result = await uow.lots.edit_one(id, lot_dict)
             await uow.commit()
-            return lot_id
+            return result
 
-    async def delete_lot(self, uow: InterfaceUnitOfWork, lot_id: LotDTODelete):
+    async def delete_lot(self, uow: InterfaceUnitOfWork, lot: LotDTODelete):
         async with uow:
-            lot = await uow.lots.delete_one(lot_id)
+            lot = await uow.lots.delete_one(lot.id)
             await uow.commit()
             return lot
