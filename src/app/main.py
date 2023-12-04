@@ -36,6 +36,7 @@ def create_app() -> FastAPI:
         faust_app = get_faust_app()
         # graceful shutdown
         await faust_app.stop()
+        
     add_pagination(app)
     app.include_router(api_router, prefix="/api")  # prefix=app_settings.API
     app.add_exception_handler(HTTPException, not_found)

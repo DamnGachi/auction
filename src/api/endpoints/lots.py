@@ -1,5 +1,6 @@
 from typing import Any, Union, List
 from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 
 from sqlalchemy import exc
 from fastapi_pagination import Page, add_pagination, paginate
@@ -36,8 +37,11 @@ async def create_lot(
 
 @router.post("/one", response_model=Union[LotDTORead, Any])
 async def get_lot(uow: UOWDep, lot: LotDTOGet = Depends(LotDTOGet.as_form)):
-    result = await LotsService().get_lot(uow, lot)
-    return result
+    try:
+        result = await LotsService().get_lot(uow, lot)
+        return result
+    except exc.NoResultFound:
+        return JSONResponse(status_code=404, content={"error": "Lot Not Found"})
 
 
 @router.get("/all", response_model=Page[Union[List[LotDTOGets], Any]])
@@ -49,12 +53,19 @@ async def get_lots(
 
 
 @router.delete("/")
-async def delete_lot():
-    pass
+async def delete_lot(uow: UOWDep, lot: LotDTODelete = Depends(LotDTODelete.as_form)):
+    lot_id = await LotsService().delete_lot(uow, lot)
+    if lot_id is True:
+        return {"is_deleted": True}
+    return JSONResponse(status_code=404, content={"error": "Lot Not Found"})
 
 
 @router.patch("/", response_model=Union[LotDTOEdit, Any])
 async def edit_lot(uow: UOWDep, lot: LotDTOEdit = Depends(LotDTOEdit.as_form)):
     """Изменяет ставку лота когда её перебивает другой аукционер"""
-    result = await LotsService().edit_lot(uow, lot)
-    return result
+    try:
+        result = await LotsService().edit_lot(uow, lot)
+        if result is True:
+            return result
+    except exc.NoResultFound:
+        return JSONResponse(status_code=404, content={"error": "Lot Not Found"})
