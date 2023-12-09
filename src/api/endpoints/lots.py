@@ -67,5 +67,10 @@ async def edit_lot(uow: UOWDep, lot: LotDTOEdit = Depends(LotDTOEdit.as_form)):
         result = await LotsService().edit_lot(uow, lot)
         if result is True:
             return result
+        return JSONResponse(
+            status_code=422,
+            content={"error": "Your value should be lower than current bet"},
+        )
+
     except exc.NoResultFound:
         return JSONResponse(status_code=404, content={"error": "Lot Not Found"})

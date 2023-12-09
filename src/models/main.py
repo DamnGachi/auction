@@ -51,6 +51,7 @@ class Lot(Base):
     winner_uid: Mapped[str] = mapped_column(
         ForeignKey("users.id"), nullable=True, unique=True
     )
+    is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
     current_bet: Mapped[float] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(onupdate=func.now(), nullable=True)
@@ -63,6 +64,7 @@ class Lot(Base):
             description=self.description,
             start_bet=self.start_bet,
             winner_uid=self.winner_uid,
+            is_active=self.is_active,
             current_bet=self.current_bet,
             created_at=self.created_at,
             updated_at=self.updated_at,

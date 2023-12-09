@@ -10,6 +10,7 @@ class LotDTORead(BaseModel):
     start_bet: int | None
     winner_uid: str | None
     current_bet: int | None
+    is_active: bool | None
     created_at: datetime.datetime
     updated_at: datetime.datetime | None
     closed_at: datetime.datetime | None
@@ -69,6 +70,7 @@ class LotDTOGets(BaseModel):
     start_bet: int | None
     winner_uid: str | None
     current_bet: int | None
+    is_active: bool | None
     created_at: datetime.datetime
     updated_at: datetime.datetime | None
     closed_at: datetime.datetime | None
