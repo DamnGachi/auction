@@ -26,8 +26,9 @@ class LotsService:
     async def edit_lot(self, uow: InterfaceUnitOfWork, lot: LotDTOEdit):
         lot_dict = lot.model_dump()
         id = lot_dict["id"]
-        # lot_in_db = self.get_lot(uow, lot)
-        # if lot_in_db.current_bet
+        lot_in_db = await self.get_lot(uow, lot)
+        if lot_in_db.current_bet > lot.current_bet:
+            return False
         async with uow:
             result = await uow.lots.edit_one(id, lot_dict)
             await uow.commit()
