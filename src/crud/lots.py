@@ -1,10 +1,22 @@
 from datetime import datetime
 from uuid import uuid4
-from src.dto.lots import LotDTOAdd, LotDTODelete, LotDTOEdit, LotDTOGet
+from src.dto.lots import LotDTOAdd, LotDTODelete, LotDTOEdit, LotDTOGet, LotDTOArchive
 from src.utils.unitofwork import InterfaceUnitOfWork
 
 
 class LotsService:
+    async def move_to_archive(self, uow: InterfaceUnitOfWork, lot: LotDTOArchive):
+        lot_dict = lot.model_dump()
+        if lot_dict["is_active"] == True:
+            return None
+        async with uow:
+            from src.app.worker.tasks.lots import agent_lots
+
+            lot = await uow.lots.move_archive(id, lot_dict)
+            await uow.commit()
+            # await agent_lots.send(lot_dict)
+            return lot
+
     async def add_lot(self, uow: InterfaceUnitOfWork, lot: LotDTOAdd):
         lot_dict = lot.model_dump()
         lot_dict["id"] = uuid4()
