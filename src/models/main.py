@@ -53,6 +53,7 @@ class Lot(Base):
     )
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
     current_bet: Mapped[float] = mapped_column(nullable=True)
+    closed_bet: Mapped[float] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(onupdate=func.now(), nullable=True)
     closed_at: Mapped[datetime] = mapped_column(nullable=True)
@@ -78,6 +79,10 @@ class Category(Base):
     title: Mapped[str]
 
 
-class LotHistory(Base):
-    __tablename__ = "lots_history"
-    id: Mapped[int] = mapped_column(primary_key=True)
+# class LotHistory(Base):
+#     __tablename__ = "lots_history"
+#     id: Mapped[int] = mapped_column(primary_key=True)
+#     lot_id: Mapped[str] = mapped_column(
+#         ForeignKey("lot.id"), nullable=True, unique=True
+#     )
+#     closed_bet: Mapped[float] = mapped_column(nullable=True)

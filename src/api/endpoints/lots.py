@@ -12,6 +12,7 @@ from src.dto.lots import (
     LotDTOGets,
     LotDTOGet,
     LotDTORead,
+    LotDTOArchive,
 )
 from src.crud.lots import LotsService
 
@@ -19,11 +20,13 @@ from src.crud.lots import LotsService
 router = APIRouter()
 
 
-@router.put("/")
+@router.put("/", response_model=Union[LotDTOArchive, Any])
 async def move_lot_to_archive(
     uow: UOWDep,
+    lot: LotDTOArchive = Depends(LotDTOArchive.as_form),
 ):
-    pass
+    lot_archived = await LotsService().move_to_archive(uow, lot)
+    return lot_archived
 
 
 @router.post("/", response_model=Union[LotDTOAdd, Any])
@@ -60,7 +63,7 @@ async def delete_lot(uow: UOWDep, lot: LotDTODelete = Depends(LotDTODelete.as_fo
     return JSONResponse(status_code=404, content={"error": "Lot Not Found"})
 
 
-@router.patch("/", response_model=Union[LotDTOEdit, Any])
+@router.patch("/current_bet", response_model=Union[LotDTOEdit, Any])
 async def edit_lot(uow: UOWDep, lot: LotDTOEdit = Depends(LotDTOEdit.as_form)):
     """Изменяет ставку лота когда её перебивает другой аукционер"""
     try:

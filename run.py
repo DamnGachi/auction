@@ -6,5 +6,6 @@ sys.path.append(str(BASE_DIR))
 
 from src.app.main import create_app as backend_app
 
+# Za руtноп
 
 app = backend_app()

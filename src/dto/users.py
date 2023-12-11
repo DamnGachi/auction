@@ -11,6 +11,7 @@ class UserDTORead(BaseModel):
     class Config:
         from_attributes = True
 
+
 class UserDTOResponse(BaseModel):
     id: UUID
 
