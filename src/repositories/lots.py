@@ -27,5 +27,6 @@ class LotsRepository(SQLAlchemyRepository):
             )
         )
 
-        res = await self.session.execute(stmt)
-        return res.scalar_one()
+        rows = await self.session.execute(stmt)
+        res = rows.fetchone()
+        return res

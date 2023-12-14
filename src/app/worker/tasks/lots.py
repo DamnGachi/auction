@@ -8,5 +8,4 @@ topic = faust_app.topic("lots")
 @faust_app.agent(topic)
 async def agent_lots(stream):
     async for lot in stream:
-        lot_id = lot["id"]
-        yield lot_id
+        yield lot
