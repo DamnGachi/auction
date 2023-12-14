@@ -15,7 +15,7 @@ from src.dto.lots import (
     LotDTOArchive,
 )
 from src.crud.lots import LotsService
-
+from sqlalchemy.exc import NoResultFound
 
 router = APIRouter()
 
@@ -25,8 +25,14 @@ async def move_lot_to_archive(
     uow: UOWDep,
     lot: LotDTOArchive = Depends(LotDTOArchive.as_form),
 ):
-    lot_archived = await LotsService().move_to_archive(uow, lot)
-    return lot_archived
+    try:
+        lot_archived = await LotsService().move_to_archive(uow, lot)
+        if lot_archived is None:
+            return JSONResponse(status_code=404, content={"error": "Lot not found"})
+        return lot_archived
+    except NoResultFound:
+        # Ошибка, если лот не найден
+        return JSONResponse(status_code=404, content={"error": "Lot not found"})
 
 
 @router.post("/", response_model=Union[LotDTOAdd, Any])

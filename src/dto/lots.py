@@ -74,6 +74,8 @@ class LotDTOArchive(BaseModel):
         id: UUID = Form(...),
         is_active: bool = Form(False),
     ):
+        if is_active is True:  # Если передано значение True, заменяем его на False
+            is_active = False
         return cls(id=id, is_active=is_active)
 
 
