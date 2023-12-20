@@ -1,12 +1,18 @@
 from typing import Any, Union
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-from src.db.database import async_get_session
+
 from src.app.basic import Hasher, JWTBearer
+from src.db.database import async_get_session
+from src.dto.auth import (
+    ProtectedResponse,
+    TokenLoginResponse,
+    TokenRefreshResponse,
+)
 from src.dto.users import UserDTOAdd, UserDTORead
-from src.dto.auth import TokenLoginResponse, TokenRefreshResponse, ProtectedResponse
 
 router = APIRouter()
 

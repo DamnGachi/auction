@@ -1,13 +1,14 @@
 import importlib
-from sqlalchemy import select
 from typing import Annotated
-from fastapi.responses import JSONResponse
-from fastapi import APIRouter, Depends
-from src.db.database import async_get_session
-from src.app.logger import logger
 
+from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
+from sqlalchemy import select
 # from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.app.logger import logger
+from src.db.database import async_get_session
 
 router = APIRouter()
 

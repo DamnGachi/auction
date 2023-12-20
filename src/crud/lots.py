@@ -1,6 +1,13 @@
 from datetime import datetime
 from uuid import uuid4
-from src.dto.lots import LotDTOAdd, LotDTODelete, LotDTOEdit, LotDTOGet, LotDTOArchive
+
+from src.dto.lots import (
+    LotDTOAdd,
+    LotDTOArchive,
+    LotDTODelete,
+    LotDTOEdit,
+    LotDTOGet,
+)
 from src.utils.unitofwork import InterfaceUnitOfWork
 
 

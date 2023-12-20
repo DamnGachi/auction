@@ -1,10 +1,11 @@
 from typing import Optional
+
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from sqlalchemy import select
-from sqlalchemy.orm import Session
 from fastapi_jwt_auth import AuthJWT
 from passlib.context import CryptContext
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from src.models.main import User
 

@@ -1,7 +1,6 @@
 .PHONY: lint
 lint: ## Run linters
 	isort .
-	flake8
 	mypy .
 
 

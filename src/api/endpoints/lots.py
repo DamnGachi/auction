@@ -1,21 +1,23 @@
-from typing import Any, Union, List
+from typing import Any, List, Union
+
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-
-from sqlalchemy import exc
 from fastapi_pagination import Page, add_pagination, paginate
-from .dependencies import UOWDep
+from sqlalchemy import exc
+from sqlalchemy.exc import NoResultFound
+
+from crud.lot import LotsService
 from src.dto.lots import (
     LotDTOAdd,
+    LotDTOArchive,
     LotDTODelete,
     LotDTOEdit,
-    LotDTOGets,
     LotDTOGet,
+    LotDTOGets,
     LotDTORead,
-    LotDTOArchive,
 )
-from src.crud.lots import LotsService
-from sqlalchemy.exc import NoResultFound
+
+from .dependencies import UOWDep
 
 router = APIRouter()
 

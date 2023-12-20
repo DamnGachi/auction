@@ -4,24 +4,24 @@ from pathlib import Path
 
 from fastapi_pagination import add_pagination
 from pydantic import BaseModel
+
 from src.app.logger import logger
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 sys.path.append(str(BASE_DIR))
 
 from fastapi import FastAPI, HTTPException, Request, Response, status
-from src.api import api_router
-from src.app.worker.init import get_faust_app, set_faust_app_for_api
-from src.utils.exception_handlers import (
-    internal_server_error,
-    not_found,
-    authjwt_exception_handler,
-)
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
 
-from fastapi.middleware.cors import CORSMiddleware
-
+from src.api import api_router
+from src.app.worker.init import get_faust_app, set_faust_app_for_api
+from src.utils.exception_handlers import (
+    authjwt_exception_handler,
+    internal_server_error,
+    not_found,
+)
 
 app = FastAPI(debug=True)
 
