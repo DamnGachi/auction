@@ -79,6 +79,19 @@ class LotDTOArchive(BaseModel):
         return cls(id=id, is_active=is_active)
 
 
+class LotDTOWinner(BaseModel):
+    lot_id: UUID
+    
+    @classmethod
+    def as_form(
+        cls,
+        lot_id: UUID = Form(...),
+    ):
+        if is_active is True:  # Если передано значение True, заменяем его на False
+            is_active = False
+        return cls(lot_id=lot_id)
+
+
 class LotDTOGets(BaseModel):
     id: UUID
     title: str | None

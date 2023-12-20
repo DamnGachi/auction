@@ -28,11 +28,21 @@ async def move_lot_to_archive(
     try:
         lot_archived = await LotsService().move_to_archive(uow, lot)
         if lot_archived is None:
-            return JSONResponse(status_code=404, content={"error": "Lot not found"})
+            raise NoResultFound
         return lot_archived
     except NoResultFound:
         # Ошибка, если лот не найден
         return JSONResponse(status_code=404, content={"error": "Lot not found"})
+
+
+@router.patch("/")
+async def lot_winner(
+    uow: UOWDep,
+    lot: LotDTOArchive = Depends(LotDTOArchive.as_form),
+
+):
+    """Закрывает лот и изменяет сумму пользователя"""
+    pass
 
 
 @router.post("/", response_model=Union[LotDTOAdd, Any])
