@@ -1,12 +1,13 @@
+import uuid
 from datetime import datetime
+
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
-from src.dto.lots import LotDTORead
-from src.dto.users import UserDTORead
 
 from src.db.database import Base
-from sqlalchemy.orm import Mapped, mapped_column
-import uuid
+from src.dto.lots import LotDTORead
+from src.dto.users import UserDTORead
 
 # from src.utils.base import Base
 

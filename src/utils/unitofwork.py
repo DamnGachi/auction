@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from typing import Type
 
 from src.db.database import async_factory
-from src.repositories.users import UsersRepository
 from src.repositories.lots import LotsRepository
+from src.repositories.users import UsersRepository
 
 
 class InterfaceUnitOfWork(ABC):

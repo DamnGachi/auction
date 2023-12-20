@@ -1,8 +1,10 @@
 from uuid import UUID
+
 from sqlalchemy import update
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.models.main import Lot
 from src.utils.repository import SQLAlchemyRepository
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class LotsRepository(SQLAlchemyRepository):

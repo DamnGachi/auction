@@ -1,9 +1,11 @@
 from typing import Any, List, Union
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
-
 from sqlalchemy import exc
-from .dependencies import UOWDep
+from sqlalchemy.exc import NoResultFound
+
+from src.crud.users import UsersService
 from src.dto.users import (
     UserDTOAdd,
     UserDTODelete,
@@ -12,8 +14,8 @@ from src.dto.users import (
     UserDTORead,
     UserDTOResponse,
 )
-from src.crud.users import UsersService
-from sqlalchemy.exc import NoResultFound
+
+from .dependencies import UOWDep
 
 router = APIRouter()
 

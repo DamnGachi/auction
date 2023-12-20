@@ -2,7 +2,12 @@ from uuid import UUID, uuid4
 
 from fastapi import HTTPException
 
-from src.dto.users import UserDTOAdd, UserDTODelete, UserDTOEdit, UserDTOGet
+from src.dto.users import (
+    UserDTOAdd,
+    UserDTODelete,
+    UserDTOEdit,
+    UserDTOGet,
+)
 from src.utils.unitofwork import InterfaceUnitOfWork
 
 

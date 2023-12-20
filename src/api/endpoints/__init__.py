@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from . import health, users, lots
+
+from . import auth, health, lots, users
 
 router = APIRouter()
 
@@ -19,4 +20,9 @@ router.include_router(
     lots.router,
     prefix="/lots",
     tags=["lots"],
+)
+router.include_router(
+    auth.router,
+    prefix="/auth",
+    tags=["auth"],
 )
