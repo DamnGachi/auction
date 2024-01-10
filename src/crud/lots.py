@@ -7,6 +7,7 @@ from src.dto.lots import (
     LotDTODelete,
     LotDTOEdit,
     LotDTOGet,
+    LotDTOWinner,
 )
 from src.utils.unitofwork import InterfaceUnitOfWork
 
@@ -19,7 +20,7 @@ class LotsService:
 
             lot = await uow.lots.move_archive(id=lot_dict["id"], data=lot_dict)
             await uow.commit()
-            # await agent_lots.send(value=lot_dict)
+            await agent_lots.send(value=lot_dict)
             return lot
 
     async def add_lot(self, uow: InterfaceUnitOfWork, lot: LotDTOAdd):
@@ -55,4 +56,15 @@ class LotsService:
         async with uow:
             lot = await uow.lots.delete_one(lot.id)
             await uow.commit()
+            return lot
+
+    async def lot_winner(self, uow: InterfaceUnitOfWork, lot: LotDTOWinner):
+        lot_dict = lot.model_dump()
+        async with uow:
+            from src.app.worker.tasks.lots import agent_lots
+
+            lot = await uow.lots.update_lot_winner(lot_id=lot.id, data=lot_dict)
+            await uow.commit()
+            await agent_lots.send(value=lot)
+
             return lot

@@ -48,16 +48,16 @@ class Lot(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=True)
-    start_bet: Mapped[int] = mapped_column(nullable=False)
+    start_bet: Mapped[float] = mapped_column(nullable=False)
     winner_uid: Mapped[str] = mapped_column(
-        ForeignKey("users.id"), nullable=True, unique=True
+        ForeignKey("users.id"), nullable=True, unique=False
     )
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
     current_bet: Mapped[float] = mapped_column(nullable=True)
     closed_bet: Mapped[float] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(onupdate=func.now(), nullable=True)
-    closed_at: Mapped[datetime] = mapped_column(nullable=True)
+    closed_at: Mapped[datetime] = mapped_column(onupdate=func.now(), nullable=True)
 
     def to_read_model(self) -> LotDTORead:
         return LotDTORead(

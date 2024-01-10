@@ -6,7 +6,7 @@ from fastapi_pagination import Page, add_pagination, paginate
 from sqlalchemy import exc
 from sqlalchemy.exc import NoResultFound
 
-from crud.lot import LotsService
+from src.crud.lots import LotsService
 from src.dto.lots import (
     LotDTOAdd,
     LotDTOArchive,
@@ -15,6 +15,7 @@ from src.dto.lots import (
     LotDTOGet,
     LotDTOGets,
     LotDTORead,
+    LotDTOWinner
 )
 
 from .dependencies import UOWDep
@@ -40,11 +41,17 @@ async def move_lot_to_archive(
 @router.patch("/")
 async def lot_winner(
     uow: UOWDep,
-    lot: LotDTOArchive = Depends(LotDTOArchive.as_form),
-
+    lot: LotDTOWinner = Depends(LotDTOWinner.as_form),
 ):
     """Закрывает лот и изменяет сумму пользователя"""
-    pass
+    try:
+        lot_archived = await LotsService().lot_winner(uow, lot)
+        if lot_archived is None:
+            raise NoResultFound
+        return lot_archived
+    except NoResultFound:
+        # Ошибка, если лот не найден
+        return JSONResponse(status_code=404, content={"error": "Lot not found"})
 
 
 @router.post("/", response_model=Union[LotDTOAdd, Any])
