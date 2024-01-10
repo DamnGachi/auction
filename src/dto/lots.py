@@ -82,7 +82,7 @@ class LotDTOArchive(BaseModel):
 
 class LotDTOWinner(BaseModel):
     lot_id: UUID
-    
+
     @classmethod
     def as_form(
         cls,
@@ -123,3 +123,25 @@ class LotDTODelete(BaseModel):
         id: UUID = Form(...),
     ):
         return cls(id=id)
+
+
+class LotDTOWinner(BaseModel):
+    lot_id: UUID
+    lot_winner: UUID
+    closed_bet: float
+    closed_at: datetime.datetime
+
+    @classmethod
+    def as_form(
+        cls,
+        lot_id: UUID = Form(...),
+        lot_winner: UUID = Form(...),
+        closed_bet: float = Form(...),
+        closed_at: datetime.datetime = Form(...),
+    ):
+        return cls(
+            lot_id=lot_id,
+            lot_winner=lot_winner,
+            closed_bet=closed_bet,
+            closed_at=closed_at,
+        )

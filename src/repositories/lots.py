@@ -32,3 +32,20 @@ class LotsRepository(SQLAlchemyRepository):
         rows = await self.session.execute(stmt)
         res = rows.fetchone()
         return res
+
+    async def lot_winner(self, id: UUID, data: dict) -> int:
+        stmt = (
+            update(self.model)
+            .values(**data)
+            .filter_by(id=id)
+            .returning(
+                self.model.id,
+                self.model.winner_uid,
+                self.model.closed_bet,
+                self.model.closed_at,
+            )
+        )
+
+        rows = await self.session.execute(stmt)
+        res = rows.fetchone()
+        return res

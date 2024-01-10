@@ -48,7 +48,7 @@ class Lot(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=True)
-    start_bet: Mapped[int] = mapped_column(nullable=False)
+    start_bet: Mapped[float] = mapped_column(nullable=False)
     winner_uid: Mapped[str] = mapped_column(
         ForeignKey("users.id"), nullable=True, unique=True
     )
