@@ -126,22 +126,19 @@ class LotDTODelete(BaseModel):
 
 
 class LotDTOWinner(BaseModel):
-    lot_id: UUID
-    lot_winner: UUID
+    id: UUID
+    winner_uid: UUID
     closed_bet: float
-    closed_at: datetime.datetime
 
     @classmethod
     def as_form(
         cls,
-        lot_id: UUID = Form(...),
-        lot_winner: UUID = Form(...),
+        id: UUID = Form(...),
+        winner_uid: UUID = Form(...),
         closed_bet: float = Form(...),
-        closed_at: datetime.datetime = Form(...),
     ):
         return cls(
-            lot_id=lot_id,
-            lot_winner=lot_winner,
+            id=id,
+            winner_uid=winner_uid,
             closed_bet=closed_bet,
-            closed_at=closed_at,
         )
