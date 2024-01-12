@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 from fastapi_pagination import add_pagination
+import faust
 from pydantic import BaseModel
 
 from src.app.logger import logger
@@ -16,18 +17,21 @@ from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
 
 from src.api import api_router
-from src.app.worker.init import get_faust_app, set_faust_app_for_api
 from src.utils.exception_handlers import (
     authjwt_exception_handler,
     internal_server_error,
     not_found,
 )
-
-app = FastAPI(debug=True)
+from containers import ApplicationContainer
 
 
 def create_app() -> FastAPI:
-    app = FastAPI()
+    container = ApplicationContainer()
+    container.config.from_yaml('config.yml')
+
+    app: FastAPI = ApplicationContainer.app
+    app.container = container
+    # faust_app: faust.App = ApplicationContainer.faust_app
 
     class Settings(BaseModel):
         authjwt_secret_key: str = "secret"
@@ -39,23 +43,17 @@ def create_app() -> FastAPI:
         """
         return Settings()
 
-    @app.on_event("startup")
-    async def startup_event():
-        logger.info("Initializing API ...")
-        # set up the faust app
-        set_faust_app_for_api()
+    # @app.on_event("startup")
+    # async def startup_event():
+    #     logger.info("Initializing API ...")
+    #     # start the faust app in client mode
+    #     asyncio.create_task(faust_app.start_client())
 
-        faust_app = get_faust_app()
-
-        # start the faust app in client mode
-        asyncio.create_task(faust_app.start_client())
-
-    @app.on_event("shutdown")
-    async def shutdown_event():
-        logger.info("Shutting down API")
-        faust_app = get_faust_app()
-        # graceful shutdown
-        await faust_app.stop()
+    # @app.on_event("shutdown")
+    # async def shutdown_event():
+    #     logger.info("Shutting down API")
+    #     # graceful shutdown
+    #     await faust_app.stop()
 
     add_pagination(app)
     app.include_router(api_router, prefix="/api")  # prefix=app_settings.API
@@ -64,7 +62,7 @@ def create_app() -> FastAPI:
     app.add_exception_handler(AuthJWTException, authjwt_exception_handler)
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"], # not for production
+        allow_origins=["*"],  # not for production
         allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
         allow_headers=[
             "Content-Type",

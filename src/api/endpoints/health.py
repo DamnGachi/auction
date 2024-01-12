@@ -3,9 +3,12 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+import kafka
 from sqlalchemy import select
+
 # from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.app.worker.tasks.health import health_check
 
 from src.app.logger import logger
 from src.db.database import async_get_session
@@ -28,7 +31,12 @@ router = APIRouter()
 )
 async def health() -> JSONResponse:
     """Send message to broker, for helath check"""
-    return JSONResponse(status_code=501, content={"error": "NotImplementedError"})
+    try:
+        data = {"health": True}
+        await health_check.send(value=data)
+        return JSONResponse(status_code=200, content={"successful": True})
+    except kafka.errors.KafkaConnectionError:
+        return JSONResponse(status_code=200, content={"successful": False})
 
 
 @router.get(
