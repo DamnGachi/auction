@@ -22,7 +22,7 @@ from src.utils.exception_handlers import (
     internal_server_error,
     not_found,
 )
-from containers import ApplicationContainer
+from containers import ApplicationContainer, BrokerContainer
 
 
 def create_app() -> FastAPI:
@@ -31,7 +31,7 @@ def create_app() -> FastAPI:
 
     app: FastAPI = ApplicationContainer.app
     app.container = container
-    # faust_app: faust.App = ApplicationContainer.faust_app
+    faust_app: faust.App = BrokerContainer.faust_app
 
     class Settings(BaseModel):
         authjwt_secret_key: str = "secret"
@@ -43,17 +43,17 @@ def create_app() -> FastAPI:
         """
         return Settings()
 
-    # @app.on_event("startup")
-    # async def startup_event():
-    #     logger.info("Initializing API ...")
-    #     # start the faust app in client mode
-    #     asyncio.create_task(faust_app.start_client())
+    @app.on_event("startup")
+    async def startup_event():
+        logger.info("Initializing API ...")
+        # start the faust app in client mode
+        asyncio.create_task(faust_app.start_client())
 
-    # @app.on_event("shutdown")
-    # async def shutdown_event():
-    #     logger.info("Shutting down API")
-    #     # graceful shutdown
-    #     await faust_app.stop()
+    @app.on_event("shutdown")
+    async def shutdown_event():
+        logger.info("Shutting down API")
+        # graceful shutdown
+        await faust_app.stop()
 
     add_pagination(app)
     app.include_router(api_router, prefix="/api")  # prefix=app_settings.API
