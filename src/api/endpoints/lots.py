@@ -15,7 +15,7 @@ from src.dto.lots import (
     LotDTOGet,
     LotDTOGets,
     LotDTORead,
-    LotDTOWinner
+    LotDTOWinner,
 )
 
 from .dependencies import UOWDep
@@ -52,6 +52,12 @@ async def lot_winner(
     except NoResultFound:
         # Ошибка, если лот не найден
         return JSONResponse(status_code=404, content={"error": "Lot not found"})
+    except ValueError:
+        # Ошибка, если лот закрылся с ставкой превушающий баланс пользователя
+        return JSONResponse(
+            status_code=403,
+            content={"error": "Closed bet is too high for your balance"},
+        )
 
 
 @router.post("/", response_model=Union[LotDTOAdd, Any])

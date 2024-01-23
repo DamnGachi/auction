@@ -63,8 +63,11 @@ class LotsService:
         async with uow:
             from src.app.worker.tasks.lots import agent_lots
 
-            lot = await uow.lots.update_lot_winner(lot_id=lot.id, data=lot_dict)
+            update_lot = await uow.lots.update_lot_winner(lot_id=lot.id, data=lot_dict)
+            update_balance = await uow.users.update_user_balance(
+                user_id=lot.winner_uid, data=lot_dict
+            )
             await uow.commit()
-            await agent_lots.send(value=lot)
+            await agent_lots.send(value=update_lot)
 
-            return lot
+            return update_lot

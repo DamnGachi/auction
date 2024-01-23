@@ -9,7 +9,6 @@ from src.db.database import Base
 from src.dto.lots import LotDTORead
 from src.dto.users import UserDTORead
 
-# from src.utils.base import Base
 
 
 class User(Base):
