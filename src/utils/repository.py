@@ -40,7 +40,7 @@ class SQLAlchemyRepository(AbstractRepository):
         return res
 
     async def find_one(self, filter_by):
-        filter_conditions = {"id": filter_by.id}
+        filter_conditions = {"id": filter_by["id"]}
         stmt = select(self.model).filter_by(**filter_conditions)
         res = await self.session.execute(stmt)
         res = res.scalar_one().to_read_model()

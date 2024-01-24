@@ -36,7 +36,7 @@ async def health() -> JSONResponse:
         await health_check.send(value=data)
         return JSONResponse(status_code=200, content={"successful": True})
     except kafka.errors.KafkaConnectionError:
-        return JSONResponse(status_code=200, content={"successful": False})
+        return JSONResponse(status_code=500, content={"successful": False})
 
 
 @router.get(
