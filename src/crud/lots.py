@@ -4,6 +4,7 @@ from uuid import uuid4
 from src.dto.lots import (
     LotDTOAdd,
     LotDTOArchive,
+    LotDTOCurrentBet,
     LotDTODelete,
     LotDTOEdit,
     LotDTOGet,
@@ -41,16 +42,24 @@ class LotsService:
             reuslt = await uow.lots.find_one(lot)
             return reuslt
 
-    async def edit_lot(self, uow: InterfaceUnitOfWork, lot: LotDTOEdit):
+    async def edit_lot_current_bet(
+        self, uow: InterfaceUnitOfWork, lot: LotDTOCurrentBet
+    ):
         lot_dict = lot.model_dump()
-        id = lot_dict["id"]
-        lot_in_db = await self.get_lot(uow, lot)
-        if lot_in_db.current_bet > lot.current_bet:
-            return False
+        data_for_lot = dict()
+        data_for_lot["id"] = lot.lot_id
+        data_for_lot["current_bet"] = lot.current_bet
+        
         async with uow:
-            result = await uow.lots.edit_one(id, lot_dict)
+            from src.app.worker.tasks.lots import agent_lots
+
+            update_lot = await uow.lots.edit_one(lot.lot_id, data_for_lot)
+            update_balance = await uow.users.update_user_balance(
+                user_id=lot.user_id, data=lot_dict
+            )
             await uow.commit()
-            return result
+            await agent_lots.send(value=update_lot)
+            return update_lot
 
     async def delete_lot(self, uow: InterfaceUnitOfWork, lot: LotDTODelete):
         async with uow:
@@ -64,9 +73,6 @@ class LotsService:
             from src.app.worker.tasks.lots import agent_lots
 
             update_lot = await uow.lots.update_lot_winner(lot_id=lot.id, data=lot_dict)
-            update_balance = await uow.users.update_user_balance(
-                user_id=lot.winner_uid, data=lot_dict
-            )
             await uow.commit()
             await agent_lots.send(value=update_lot)
 

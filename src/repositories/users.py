@@ -9,10 +9,10 @@ class UsersRepository(SQLAlchemyRepository):
 
     async def update_user_balance(self, user_id: UUID, data: dict) -> int:
         new_data = dict()
-        old_balance = await self.find_one(filter_by={"id": user_id})
-        if old_balance < data["closed_bet"]:
+        balance = (await self.find_one(filter_by={"id": user_id})).balance
+        if balance < data["current_bet"]:
             raise ValueError
-        new_balance = old_balance.balance - data["closed_bet"]
+        new_balance = balance - data["current_bet"]
         new_data["balance"] = new_balance
         stmt = (
             update(self.model)

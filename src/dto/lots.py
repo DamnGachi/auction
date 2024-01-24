@@ -142,3 +142,22 @@ class LotDTOWinner(BaseModel):
             winner_uid=winner_uid,
             closed_bet=closed_bet,
         )
+
+
+class LotDTOCurrentBet(BaseModel):
+    lot_id: UUID
+    user_id: UUID
+    current_bet: float
+
+    @classmethod
+    def as_form(
+        cls, 
+        lot_id: UUID = Form(...),
+        user_id: UUID = Form(...),
+        current_bet: float = Form(...),
+    ):
+        return cls(
+            lot_id=lot_id,
+            user_id=user_id,
+            current_bet=current_bet,
+        )

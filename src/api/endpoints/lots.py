@@ -10,6 +10,7 @@ from src.crud.lots import LotsService
 from src.dto.lots import (
     LotDTOAdd,
     LotDTOArchive,
+    LotDTOCurrentBet,
     LotDTODelete,
     LotDTOEdit,
     LotDTOGet,
@@ -52,12 +53,15 @@ async def lot_winner(
     except NoResultFound:
         # Ошибка, если лот не найден
         return JSONResponse(status_code=404, content={"error": "Lot not found"})
-    except ValueError:
-        # Ошибка, если лот закрылся с ставкой превушающий баланс пользователя
-        return JSONResponse(
-            status_code=403,
-            content={"error": "Closed bet is too high for your balance"},
-        )
+
+
+# @router.patch("/current_bet")
+# async def lot_current_bet(
+#     uow: UOWDep,
+#     lot: LotDTOCurrentBet = Depends(LotDTOCurrentBet.as_form),
+# ):
+#     """Изменяет текущию ставку лота"""
+#     lot = await LotsService().lot_current_bet(uow, lot)
 
 
 @router.post("/", response_model=Union[LotDTOAdd, Any])
@@ -94,17 +98,20 @@ async def delete_lot(uow: UOWDep, lot: LotDTODelete = Depends(LotDTODelete.as_fo
     return JSONResponse(status_code=404, content={"error": "Lot Not Found"})
 
 
-@router.patch("/current_bet", response_model=Union[LotDTOEdit, Any])
-async def edit_lot(uow: UOWDep, lot: LotDTOEdit = Depends(LotDTOEdit.as_form)):
-    """Изменяет ставку лота когда её перебивает другой аукционер"""
+@router.patch("/current_bet", response_model=Union[LotDTOCurrentBet, Any])
+async def edit_lot(
+    uow: UOWDep, lot: LotDTOCurrentBet = Depends(LotDTOCurrentBet.as_form)
+):
+    """Изменяет ставку лота"""
     try:
-        result = await LotsService().edit_lot(uow, lot)
-        if result is True:
-            return result
-        return JSONResponse(
-            status_code=422,
-            content={"error": "Your value should be lower than current bet"},
-        )
+        result = await LotsService().edit_lot_current_bet(uow, lot)
+        return result
 
     except exc.NoResultFound:
         return JSONResponse(status_code=404, content={"error": "Lot Not Found"})
+    except ValueError:
+        # Ошибка, если лот закрылся с ставкой превушающий баланс пользователя
+        return JSONResponse(
+            status_code=403,
+            content={"error": "Your bet is too high for your balance"},
+        )
