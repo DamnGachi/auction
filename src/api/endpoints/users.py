@@ -1,6 +1,6 @@
 from typing import Any, List, Union
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy import exc
 from sqlalchemy.exc import NoResultFound

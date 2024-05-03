@@ -1,19 +1,21 @@
 """never
 
-Revision ID: 94ac79106871
-Revises: 
-Create Date: 2023-10-27 11:54:31.258985
+Revision ID: fefdb6a83de0
+Revises: 2c089260fda3
+Create Date: 2024-04-18 20:49:55.532755
 
 """
+from typing import Sequence, Union
+
 from alembic import op
 import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '94ac79106871'
-down_revision = None
-branch_labels = None
-depends_on = None
+revision: str = 'fefdb6a83de0'
+down_revision: Union[str, None] = '2c089260fda3'
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
@@ -23,29 +25,28 @@ def upgrade() -> None:
     sa.Column('title', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('lots_history',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('users',
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('hashed_password', sa.String(), nullable=False),
     sa.Column('balance', sa.Float(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('username')
     )
     op.create_table('lots',
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('title', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
-    sa.Column('start_bet', sa.Integer(), nullable=False),
+    sa.Column('start_bet', sa.Float(), nullable=False),
     sa.Column('winner_uid', sa.Uuid(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('current_bet', sa.Float(), nullable=True),
+    sa.Column('closed_bet', sa.Float(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.Column('closed_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('closed_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['winner_uid'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('winner_uid')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users_lots',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -63,6 +64,5 @@ def downgrade() -> None:
     op.drop_table('users_lots')
     op.drop_table('lots')
     op.drop_table('users')
-    op.drop_table('lots_history')
     op.drop_table('categories')
     # ### end Alembic commands ###

@@ -2,7 +2,7 @@ from typing import Any, List, Union
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-from fastapi_pagination import Page, add_pagination, paginate
+from fastapi_pagination import Page, paginate
 from sqlalchemy import exc
 from sqlalchemy.exc import NoResultFound
 
@@ -12,7 +12,6 @@ from src.dto.lots import (
     LotDTOArchive,
     LotDTOCurrentBet,
     LotDTODelete,
-    LotDTOEdit,
     LotDTOGet,
     LotDTOGets,
     LotDTORead,
@@ -87,7 +86,10 @@ async def get_lots(
     uow: UOWDep,
 ):
     lots = await LotsService().get_lots(uow)
-    return paginate(lots)
+    print(lots)
+    # return lots
+
+    # return paginate(lots)
 
 
 @router.delete("/")
