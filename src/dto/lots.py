@@ -1,4 +1,5 @@
 import datetime
+from typing import Any
 from uuid import UUID
 
 from fastapi import Form
@@ -9,7 +10,7 @@ class LotDTORead(BaseModel):
     id: UUID
     title: str | None
     start_bet: int | None
-    winner_uid: str | None
+    winner_uid: Any | None
     current_bet: int | None
     is_active: bool | None
     created_at: datetime.datetime
@@ -151,7 +152,7 @@ class LotDTOCurrentBet(BaseModel):
 
     @classmethod
     def as_form(
-        cls, 
+        cls,
         lot_id: UUID = Form(...),
         user_id: UUID = Form(...),
         current_bet: float = Form(...),

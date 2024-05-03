@@ -1,4 +1,3 @@
-from datetime import datetime
 from uuid import uuid4
 
 from src.dto.lots import (
@@ -6,7 +5,6 @@ from src.dto.lots import (
     LotDTOArchive,
     LotDTOCurrentBet,
     LotDTODelete,
-    LotDTOEdit,
     LotDTOGet,
     LotDTOWinner,
 )

@@ -1,7 +1,6 @@
 from typing import Any, Union
 
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
@@ -11,6 +10,7 @@ from src.dto.auth import (
     ProtectedResponse,
     TokenLoginResponse,
     TokenRefreshResponse,
+    UserLoginDTO,
 )
 from src.dto.users import UserDTOAdd, UserDTORead
 
@@ -39,22 +39,22 @@ async def register(
     # return user
 
 
-@router.post("/login", response_model=Union[TokenLoginResponse, Any])
+@router.post("/login", response_model=Union[TokenLoginResponse, dict])
 async def login(
-    user: UserDTOAdd = Depends(UserDTOAdd.as_form),
+    user: UserLoginDTO = Depends(UserLoginDTO.as_form),
     Authorize: AuthJWT = Depends(),
     session: Session = Depends(async_get_session),
 ):
     authenticate = await Hasher().authenticate_user(
         username=user.username, password=user.password, session=session
     )
-    if authenticate == False:
+    if authenticate is False:
         raise HTTPException(status_code=401, detail="Bad username or password")
 
     access_token = Authorize.create_access_token(subject=user.username)
     refresh_token = Authorize.create_refresh_token(subject=user.username)
     return {"access_token": access_token, "refresh_token": refresh_token}
-
+ 
 
 @router.post(
     "/refresh",

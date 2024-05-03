@@ -1,6 +1,6 @@
 from uuid import UUID
 from sqlalchemy import update
-from src.models.main import Lot, User
+from src.models.main import User
 from src.utils.repository import SQLAlchemyRepository
 
 
