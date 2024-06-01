@@ -33,6 +33,7 @@ class LotsService:
     async def get_lots(self, uow: InterfaceUnitOfWork):
         async with uow:
             lots = await uow.lots.find_all()
+            print(lots)
             return lots
 
     async def get_lot(self, uow: InterfaceUnitOfWork, lot: LotDTOGet):

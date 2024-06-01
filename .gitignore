@@ -46,6 +46,8 @@ __pypackages__/
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid
+# Migrations
+migrations/versions
 
 # Environments
 .env
