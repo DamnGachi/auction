@@ -89,7 +89,7 @@ async def get_lots(
     print(lots)
     # return lots
 
-    # return paginate(lots)
+    return paginate(lots)
 
 
 @router.delete("/")
@@ -101,7 +101,7 @@ async def delete_lot(uow: UOWDep, lot: LotDTODelete = Depends(LotDTODelete.as_fo
 
 
 @router.patch("/current_bet", response_model=Union[LotDTOCurrentBet, Any])
-async def edit_lot(
+async def lot_current_bet(
     uow: UOWDep, lot: LotDTOCurrentBet = Depends(LotDTOCurrentBet.as_form)
 ):
     """Изменяет ставку лота"""

@@ -16,7 +16,6 @@ from src.dto.users import (
 )
 
 from .dependencies import UOWDep
-
 router = APIRouter()
 
 

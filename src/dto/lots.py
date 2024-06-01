@@ -89,8 +89,6 @@ class LotDTOWinner(BaseModel):
         cls,
         lot_id: UUID = Form(...),
     ):
-        if is_active is True:  # Если передано значение True, заменяем его на False
-            is_active = False
         return cls(lot_id=lot_id)
 
 
