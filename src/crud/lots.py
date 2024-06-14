@@ -1,5 +1,7 @@
 from uuid import uuid4
 
+from fastapi.responses import JSONResponse
+
 from src.dto.lots import (
     LotDTOAdd,
     LotDTOArchive,
@@ -48,14 +50,21 @@ class LotsService:
         data_for_lot = dict()
         data_for_lot["id"] = lot.lot_id
         data_for_lot["current_bet"] = lot.current_bet
-        
+
         async with uow:
             from src.app.worker.tasks.lots import agent_lots
 
+            not_updated_lot = await uow.lots.find_one(data_for_lot)
+            print(not_updated_lot.start_bet)
+            if lot.current_bet < not_updated_lot.start_bet:
+                return JSONResponse(
+                    status_code=409,
+                    content={"error": "Bet need to be higher than start bet"},
+                )
+
             update_lot = await uow.lots.edit_one(lot.lot_id, data_for_lot)
-            update_balance = await uow.users.update_user_balance(
-                user_id=lot.user_id, data=lot_dict
-            )
+
+            await uow.users.update_user_balance(user_id=lot.user_id, data=lot_dict)
             await uow.commit()
             await agent_lots.send(value=update_lot)
             return update_lot
