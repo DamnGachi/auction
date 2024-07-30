@@ -1,16 +1,16 @@
 from locust import HttpUser, TaskSet, task
 
 
-class LotBehavior(TaskSet):
-    @task(1)
-    def index(self):
-        self.client.get("/api/v1/lots/all")
+# class LotBehavior(TaskSet):
+#     # @task(1)
+#     # def index(self):
+#     #     self.client.get("/api/v1/lots/all")
 
 
 class UserBehavior(TaskSet):
-    @task(5)
-    def list_users(self):
-        self.client.get("/api/v1/users/all")
+    # @task(5)
+    # def list_users(self):
+    #     self.client.get("/api/v1/users/all")
 
     @task(1)
     def create_user(self):
@@ -21,6 +21,6 @@ class UserBehavior(TaskSet):
 
 
 class WebsiteUser(HttpUser):
-    tasks = [UserBehavior, LotBehavior]
+    tasks = [UserBehavior]
     min_wait = 1000
     max_wait = 2000

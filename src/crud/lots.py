@@ -35,7 +35,6 @@ class LotsService:
     async def get_lots(self, uow: InterfaceUnitOfWork):
         async with uow:
             lots = await uow.lots.find_all()
-            print(lots)
             return lots
 
     async def get_lot(self, uow: InterfaceUnitOfWork, lot: LotDTOGet):
@@ -55,7 +54,6 @@ class LotsService:
             from src.app.worker.tasks.lots import agent_lots
 
             not_updated_lot = await uow.lots.find_one(data_for_lot)
-            print(not_updated_lot.start_bet)
             if lot.current_bet < not_updated_lot.start_bet:
                 return JSONResponse(
                     status_code=409,
