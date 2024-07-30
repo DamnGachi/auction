@@ -7,3 +7,4 @@ sys.path.append(str(BASE_DIR))
 from src.app.main import create_app as backend_app
 
 app = backend_app()
+#ya ebal ne tot comit sdelal
