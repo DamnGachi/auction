@@ -9,7 +9,6 @@ from sqlalchemy.exc import NoResultFound
 from src.crud.lots import LotsService
 from src.dto.lots import (
     LotDTOAdd,
-    LotDTOArchive,
     LotDTOCurrentBet,
     LotDTODelete,
     LotDTOGet,

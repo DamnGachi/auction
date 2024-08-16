@@ -1,13 +1,6 @@
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi_jwt_auth import AuthJWT
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
-from src.models.main import User
-from src.utils.unitofwork import InterfaceUnitOfWork
-
-
 
 class JWTBearer(HTTPBearer):
     async def __call__(self, request: Request):
