@@ -86,7 +86,6 @@ async def get_lots(
     uow: UOWDep,
 ):
     lots = await LotsService().get_lots(uow)
-    print(lots)
     # return lots
 
     return paginate(lots)

@@ -16,6 +16,7 @@ class User(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str] = mapped_column(nullable=False)
+
     balance: Mapped[float]
 
     def to_read_model(self) -> UserDTORead:
