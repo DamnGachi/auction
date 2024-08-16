@@ -1,33 +1,12 @@
-
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi_jwt_auth import AuthJWT
-from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from src.models.main import User
+from src.utils.unitofwork import InterfaceUnitOfWork
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-class Hasher:
-    @staticmethod
-    def verify_password(plain_password, hashed_password):
-        return pwd_context.verify(plain_password, hashed_password)
-
-    @staticmethod
-    def get_password_hash(password: str) -> str:
-        return pwd_context.hash(password)
-
-    async def authenticate_user(cls, username: str, password: str, session: Session):
-        stmt = select(User).where(User.username == username)
-        rows = await session.execute(stmt)
-        user = rows.scalar_one_or_none()
-        if user and cls.verify_password(password, user.hashed_password):
-            return user
-        else:
-            return False
 
 
 class JWTBearer(HTTPBearer):

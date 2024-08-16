@@ -23,23 +23,23 @@ class UserDTOResponse(BaseModel):
 class UserDTOAdd(BaseModel):
     # id: UUID
     username: str
-    hashed_password: str
+    password: str
     balance: float
 
     @classmethod
     def as_form(
         cls,
         username: str = Form(...),
-        hashed_password: str = Form(...),
+        password: str = Form(...),
         balance: float = Form(...),
     ):
-        return cls(username=username, hashed_password=hashed_password, balance=balance)
+        return cls(username=username, password=password, balance=balance)
 
 
 class UserDTOEdit(BaseModel):
     id: UUID
     username: str | None
-    hashed_password: str | None
+    password: str | None
     balance: float | None
 
     @classmethod
@@ -47,11 +47,11 @@ class UserDTOEdit(BaseModel):
         cls,
         id: UUID = Form(...),
         username: str | None = Form(None),
-        hashed_password: str | None = Form(None),
+        password: str | None = Form(None),
         balance: float | None = Form(None),
     ):
         return cls(
-            id=id, username=username, hashed_password=hashed_password, balance=balance
+            id=id, username=username, password=password, balance=balance
         )
 
 

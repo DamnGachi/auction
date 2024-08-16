@@ -23,19 +23,19 @@ from .dependencies import UOWDep
 router = APIRouter()
 
 
-@router.put("/", response_model=Union[LotDTOArchive, Any])
-async def move_lot_to_archive(
-    uow: UOWDep,
-    lot: LotDTOArchive = Depends(LotDTOArchive.as_form),
-):
-    try:
-        lot_archived = await LotsService().move_to_archive(uow, lot)
-        if lot_archived is None:
-            raise NoResultFound
-        return lot_archived
-    except NoResultFound:
-        # Ошибка, если лот не найден
-        return JSONResponse(status_code=404, content={"error": "Lot not found"})
+# @router.put("/", response_model=Union[LotDTOArchive, Any])
+# async def move_lot_to_archive(
+#     uow: UOWDep,
+#     lot: LotDTOArchive = Depends(LotDTOArchive.as_form),
+# ):
+#     try:
+#         lot_archived = await LotsService().move_to_archive(uow, lot)
+#         if lot_archived is None:
+#             raise NoResultFound
+#         return lot_archived
+#     except NoResultFound:
+#         # Ошибка, если лот не найден
+#         return JSONResponse(status_code=404, content={"error": "Lot not found"})
 
 
 @router.patch("/")
@@ -95,8 +95,8 @@ async def get_lots(
 @router.delete("/")
 async def delete_lot(uow: UOWDep, lot: LotDTODelete = Depends(LotDTODelete.as_form)):
     lot_id = await LotsService().delete_lot(uow, lot)
-    if lot_id is True:
-        return {"is_deleted": True}
+    if lot_id is not None:
+        return {"message": "Lot was deleted"}
     return JSONResponse(status_code=404, content={"error": "Lot Not Found"})
 
 
@@ -108,7 +108,6 @@ async def lot_current_bet(
     try:
         result = await LotsService().edit_lot_current_bet(uow, lot)
         return result
-
     except exc.NoResultFound:
         return JSONResponse(status_code=404, content={"error": "Lot Not Found"})
     except ValueError:

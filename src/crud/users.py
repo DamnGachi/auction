@@ -8,6 +8,7 @@ from src.dto.users import (
     UserDTOGet,
 )
 from src.utils.unitofwork import InterfaceUnitOfWork
+from src.repositories.auth import AuthRepository
 
 
 class UsersService:
@@ -16,6 +17,7 @@ class UsersService:
         user_dict["id"] = uuid4()
 
         async with uow:
+            user_dict["password"] = uow.auth.get_password_hash(user_dict["password"])
             user_id = await uow.users.add_one(user_dict)
             from src.app.worker.tasks.users import agent_users
 
