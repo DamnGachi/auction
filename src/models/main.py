@@ -10,13 +10,13 @@ from src.dto.lots import LotDTORead
 from src.dto.users import UserDTORead
 
 
-
 class User(Base):
     __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(unique=False)
-    hashed_password: Mapped[str]
+    username: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str] = mapped_column(nullable=False)
+
     balance: Mapped[float]
 
     def to_read_model(self) -> UserDTORead:

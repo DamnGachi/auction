@@ -54,12 +54,16 @@ class LotsService:
             from src.app.worker.tasks.lots import agent_lots
 
             not_updated_lot = await uow.lots.find_one(data_for_lot)
-            if lot.current_bet < not_updated_lot.start_bet:
+            if lot.current_bet <= not_updated_lot.start_bet:
                 return JSONResponse(
                     status_code=409,
                     content={"error": "Bet need to be higher than start bet"},
                 )
-
+            elif lot.current_bet <= not_updated_lot.current_bet:
+                return JSONResponse(
+                    status_code=409,
+                    content={"error": "Bet need to be higher than current bet"},
+                )
             update_lot = await uow.lots.edit_one(lot.lot_id, data_for_lot)
 
             await uow.users.update_user_balance(user_id=lot.user_id, data=lot_dict)
@@ -71,6 +75,7 @@ class LotsService:
         async with uow:
             lot = await uow.lots.delete_one(lot.id)
             await uow.commit()
+            print(lot)
             return lot
 
     async def lot_winner(self, uow: InterfaceUnitOfWork, lot: LotDTOWinner):

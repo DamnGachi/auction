@@ -16,7 +16,7 @@ class UserBehavior(TaskSet):
     def create_user(self):
         self.client.post(
             "/api/v1/users",
-            {"username": "xxxasdsd", "hashed_password": "xxxxxxxxxxxx", "balance": 0},
+            {"username": "xxxasdsd", "password": "xxxxxxxxxxxx", "balance": 0},
         )
 
 

@@ -4,7 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
-from src.app.basic import Hasher, JWTBearer
+from src.crud.users import UsersService
+from src.app.basic import JWTBearer
+from src.repositories.auth import AuthRepository
 from src.db.database import async_get_session
 from src.dto.auth import (
     ProtectedResponse,
@@ -13,6 +15,9 @@ from src.dto.auth import (
     UserLoginDTO,
 )
 from src.dto.users import UserDTOAdd, UserDTORead
+from .dependencies import UOWDep
+from fastapi.responses import JSONResponse
+from sqlalchemy import exc
 
 router = APIRouter()
 
@@ -20,41 +25,35 @@ router = APIRouter()
 @router.post(
     "/register",
     response_model=Union[UserDTORead, Any],
-    dependencies=[Depends(JWTBearer())],
 )
 async def register(
+    uow: UOWDep,
     user: UserDTOAdd = Depends(UserDTOAdd.as_form),
-    Authorize: AuthJWT = Depends(),
-    session: Session = Depends(async_get_session),
 ) -> dict:
-    pass
-    # Authorize.jwt_required()
-    # username = Authorize.get_jwt_subject()
-    # user_admin = await UserDAL._is_admin(username, session)
-    # if user_admin is False:
-    #     raise HTTPException(status_code=403, detail="You are not administrator")
-    # user = await UserDAL._create_admin_user(user, session)
-    # if not user:
-    #     return {"Username already registered"}
-    # return user
+    try:
+        user_id = await UsersService().add_user(uow, user)
+        return {"user_id": user_id}
+    except exc.IntegrityError:
+        return JSONResponse(status_code=409, content={"error": "user already exist"})
 
 
 @router.post("/login", response_model=Union[TokenLoginResponse, dict])
 async def login(
+    uow: UOWDep,
     user: UserLoginDTO = Depends(UserLoginDTO.as_form),
     Authorize: AuthJWT = Depends(),
-    session: Session = Depends(async_get_session),
 ):
-    authenticate = await Hasher().authenticate_user(
-        username=user.username, password=user.password, session=session
-    )
+    async with uow:
+        authenticate = await uow.auth.authenticate_user(
+            username=user.username, password=user.password
+        )
     if authenticate is False:
         raise HTTPException(status_code=401, detail="Bad username or password")
 
     access_token = Authorize.create_access_token(subject=user.username)
     refresh_token = Authorize.create_refresh_token(subject=user.username)
     return {"access_token": access_token, "refresh_token": refresh_token}
- 
+
 
 @router.post(
     "/refresh",

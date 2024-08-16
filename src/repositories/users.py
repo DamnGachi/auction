@@ -27,3 +27,4 @@ class UsersRepository(SQLAlchemyRepository):
             "user_id": res.id,
             "user_balance": res.balance,
         }
+    
