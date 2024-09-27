@@ -27,7 +27,7 @@ router = APIRouter()
         },
     },
 )
-async def health() -> JSONResponse:
+async def health_kafka() -> JSONResponse:
     """Send message to broker, for helath check"""
     try:
         data = {"health": True}
@@ -47,7 +47,7 @@ async def health() -> JSONResponse:
         },
     },
 )
-async def health() -> JSONResponse:
+async def health_api() -> JSONResponse:
     return JSONResponse(status_code=200, content={"successful": True})
 
 
@@ -64,7 +64,7 @@ async def health() -> JSONResponse:
         },
     },
 )
-async def health(session: AsyncSession = Depends(async_get_session)) -> JSONResponse:
+async def health_database(session: AsyncSession = Depends(async_get_session)) -> JSONResponse:
     try:
         async with session as cursor:
             await cursor.scalar(select(1))

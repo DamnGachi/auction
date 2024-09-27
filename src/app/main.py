@@ -8,9 +8,6 @@ from pydantic import BaseModel
 
 from src.app.logger import logger
 
-BASE_DIR = Path(__file__).resolve().parents[2]
-sys.path.append(str(BASE_DIR))
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_jwt_auth import AuthJWT
@@ -22,16 +19,22 @@ from src.utils.exception_handlers import (
     internal_server_error,
     not_found,
 )
-from containers import ApplicationContainer, BrokerContainer
+
+# from containers import ApplicationContainer, BrokerContainer
+from containers import container
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+sys.path.append(str(BASE_DIR))
 
 
 def create_app() -> FastAPI:
-    container = ApplicationContainer()
-    container.config.from_yaml('config.yml')
+    # container = ApplicationContainer()
+    # container.config.from_yaml("config.yml")
 
-    app: FastAPI = ApplicationContainer.app
-    app.container = container
-    faust_app: faust.App = BrokerContainer.faust_app
+    # app: FastAPI = FastAPI()
+    # app.container = container
+    app: FastAPI = container.get(FastAPI)
+    faust_app: faust.App =container.get(faust.App)
 
     class Settings(BaseModel):
         authjwt_secret_key: str = "secret"

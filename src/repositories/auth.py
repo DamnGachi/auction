@@ -1,4 +1,3 @@
-from uuid import UUID
 from sqlalchemy import select
 from src.models.main import User
 from src.utils.repository import SQLAlchemyRepository

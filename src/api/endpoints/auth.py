@@ -2,12 +2,9 @@ from typing import Any, Union
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_jwt_auth import AuthJWT
-from sqlalchemy.orm import Session
 
 from src.crud.users import UsersService
 from src.app.basic import JWTBearer
-from src.repositories.auth import AuthRepository
-from src.db.database import async_get_session
 from src.dto.auth import (
     ProtectedResponse,
     TokenLoginResponse,

@@ -8,7 +8,6 @@ from src.dto.users import (
     UserDTOGet,
 )
 from src.utils.unitofwork import InterfaceUnitOfWork
-from src.repositories.auth import AuthRepository
 
 
 class UsersService:
@@ -50,4 +49,4 @@ class UsersService:
         async with uow:
             user = await uow.users.delete_one(user_id.id)
             await uow.commit()
-            return user_id
+            return user
