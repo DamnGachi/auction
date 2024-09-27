@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy import exc
 from sqlalchemy.exc import NoResultFound
-
+from fastapi_pagination import Page, paginate
 from src.crud.users import UsersService
 from src.dto.users import (
     UserDTOAdd,
@@ -25,7 +25,7 @@ async def get_users(
     uow: UOWDep,
 ):
     users = await UsersService().get_users(uow)
-    return users
+    return paginate(users)
 
 
 @router.post("/one", response_model=Union[UserDTORead, Any])

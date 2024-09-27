@@ -1,7 +1,7 @@
-
+import aiokafka
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-import kafka
+
 from sqlalchemy import select
 
 # from sqlalchemy.ext.asyncio import AsyncSession
@@ -33,7 +33,8 @@ async def health_kafka() -> JSONResponse:
         data = {"health": True}
         await health_check.send(value=data)
         return JSONResponse(status_code=200, content={"successful": True})
-    except kafka.errors.KafkaConnectionError:
+
+    except aiokafka.errors.KafkaConnectionError:
         return JSONResponse(status_code=500, content={"successful": False})
 
 
